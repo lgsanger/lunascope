@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LUNASCOPE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bhavuka&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-root">
+      <div class="starfield" id="starfield" aria-hidden="true"></div>
+      <!-- Home — Figma: Home Page (1:2) -->
+      <section id="screen-home" class="screen screen--home" data-node-id="1:2" aria-label="Home">
+        <header class="home-header">
+          <div class="home-moon" aria-hidden="true">
+            <div class="home-moon__spin">
+              <div class="home-moon__disc">
+                <span class="home-moon__crater home-moon__crater--a"></span>
+                <span class="home-moon__crater home-moon__crater--b"></span>
+                <span class="home-moon__crater home-moon__crater--c"></span>
+                <span class="home-moon__crater home-moon__crater--d"></span>
+                <span class="home-moon__crater home-moon__crater--e"></span>
+              </div>
+            </div>
+          </div>
+          <h1 class="brand-title">LUNASCOPE</h1>
+        </header>
+        <nav class="home-nav" aria-label="Main">
+          <a class="btn-pill" href="#/today">Today’s Moon Phase</a>
+          <a class="btn-pill" href="#/calendar">Full Moon Calendar</a>
+          <a class="btn-pill" href="#/phases">Phases of the Moon</a>
+          <a class="btn-pill" href="#/reflection">Reflection Prompt</a>
+          <a class="btn-pill" href="#/past">My Past Reflections</a>
+          <a class="btn-pill" href="#/void">Reflection Void</a>
+        </nav>
+      </section>
+
+      <!-- Today’s Moon Phase — Figma: 1:3 -->
+      <section id="screen-today" class="screen screen--stack is-hidden" data-node-id="1:3" aria-label="Today’s Moon Phase">
+        <header class="screen-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
+          <a class="btn-back" href="#/" aria-label="Back to home">
+            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+          </a>
+        </header>
+        <div class="moon-hero">
+          <div class="moon-hero__orbit" aria-hidden="true">
+            <img src="https://www.figma.com/api/mcp/asset/b927f68f-3854-4b5b-9135-3acba0fc4335" alt="" width="326" height="326" />
+          </div>
+          <div class="moon-hero__moon" aria-hidden="true">
+            <img src="https://www.figma.com/api/mcp/asset/91226529-d407-46ed-8d3f-0fc22d739783" alt="" width="219" height="227" />
+          </div>
+          <p class="moon-hero__phase">FULL MOON</p>
+        </div>
+        <div class="card card--datetime">
+          <p class="card__label">DATE AND TIME</p>
+          <img class="card__rule" src="https://www.figma.com/api/mcp/asset/09d6f745-2f58-45e7-81dc-736ba9e2833b" alt="" width="203" height="1" />
+          <p class="card__date">
+            <span>Wed Apr 1st</span>
+            <span>2026</span>
+          </p>
+          <img class="card__rule" src="https://www.figma.com/api/mcp/asset/09d6f745-2f58-45e7-81dc-736ba9e2833b" alt="" width="203" height="1" />
+          <p class="card__time">22:12:00 PM</p>
+        </div>
+      </section>
+
+      <!-- Full Moon Calendar — Figma: 2023:12 (wireframe excerpt) -->
+      <section id="screen-calendar" class="screen screen--scroll is-hidden" data-node-id="2023:12" aria-label="Full Moon Calendar">
+        <header class="screen-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
+          <a class="btn-back" href="#/" aria-label="Back to home">
+            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+          </a>
+        </header>
+        <h2 class="screen-subtitle">2026 Full Moons</h2>
+        <p class="screen-hint">Click to enable notifications for the next full moon</p>
+        <ul class="calendar-list">
+          <li class="calendar-item">
+            <div class="calendar-item__moon">
+              <img class="calendar-item__orbit" src="https://www.figma.com/api/mcp/asset/b927f68f-3854-4b5b-9135-3acba0fc4335" alt="" width="326" height="326" />
+              <img class="calendar-item__face" src="https://www.figma.com/api/mcp/asset/91226529-d407-46ed-8d3f-0fc22d739783" alt="" width="219" height="227" />
+            </div>
+            <p class="calendar-item__caption">JAN 3RD — WOLF MOON</p>
+          </li>
+          <li class="calendar-item">
+            <div class="calendar-item__moon calendar-item__moon--simple"></div>
+            <p class="calendar-item__caption">FEB 1ST — SNOW MOON</p>
+          </li>
+          <li class="calendar-item">
+            <div class="calendar-item__moon">
+              <img class="calendar-item__orbit" src="https://www.figma.com/api/mcp/asset/b927f68f-3854-4b5b-9135-3acba0fc4335" alt="" width="326" height="326" />
+              <img class="calendar-item__face" src="https://www.figma.com/api/mcp/asset/91226529-d407-46ed-8d3f-0fc22d739783" alt="" width="219" height="227" />
+            </div>
+            <p class="calendar-item__caption">MAR 3RD — WORM MOON</p>
+          </li>
+        </ul>
+        <p class="wireframe-note">Wireframe: additional months follow the same pattern in the Figma file.</p>
+      </section>
+
+      <!-- Phases of the Moon — Figma: 2023:26 (wireframe excerpt) -->
+      <section id="screen-phases" class="screen screen--scroll is-hidden" data-node-id="2023:26" aria-label="Phases of the Moon">
+        <header class="screen-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
+          <a class="btn-back" href="#/" aria-label="Back to home">
+            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+          </a>
+        </header>
+        <h2 class="screen-subtitle">Phases of the Moon</h2>
+        <ol class="phases-list">
+          <li class="phase-block">
+            <div class="phase-block__moon">
+              <img src="https://www.figma.com/api/mcp/asset/b927f68f-3854-4b5b-9135-3acba0fc4335" alt="" width="326" height="326" />
+            </div>
+            <p class="phase-block__name">WANING CRESCENT</p>
+          </li>
+          <li class="phase-block">
+            <div class="phase-block__moon phase-block__moon--placeholder"></div>
+            <p class="phase-block__name">THIRD QUARTER</p>
+          </li>
+          <li class="phase-block">
+            <div class="phase-block__moon phase-block__moon--placeholder"></div>
+            <p class="phase-block__name">FULL MOON</p>
+          </li>
+        </ol>
+        <p class="wireframe-note">Wireframe: full vertical sequence is in the Figma artboard.</p>
+      </section>
+
+      <!-- Reflection Prompt — Figma: 1:5 -->
+      <section id="screen-reflection" class="screen screen--stack is-hidden" data-node-id="1:5" aria-label="Reflection Prompt">
+        <header class="screen-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
+          <a class="btn-back" href="#/" aria-label="Back to home">
+            <img src="https://www.figma.com/api/mcp/asset/cfd3017d-51f7-4f40-bbe6-813b71e088ef" alt="" width="69" height="12" />
+          </a>
+        </header>
+        <h2 class="screen-subtitle screen-subtitle--on-bg">New Moon Reflection</h2>
+        <div class="card card--prompt">
+          <p class="card__tag">RELEASE</p>
+          <img class="card__rule card__rule--narrow" src="https://www.figma.com/api/mcp/asset/a54f5a5e-c861-4e2d-b3c9-6baf65aefbad" alt="" width="203" height="1" />
+          <p class="card__body">
+            What heavy emotions, limiting beliefs, or toxic situations am I ready to release with gratitude?
+          </p>
+        </div>
+        <div class="card card--journal">
+          <p class="card__label card__label--left">Type Here:</p>
+          <div class="journal-field" role="textbox" aria-multiline="true" contenteditable="true"></div>
+          <div class="journal-actions">
+            <button type="button" class="link-action">Save Reflection</button>
+            <button type="button" class="link-action">Share Reflection</button>
+          </div>
+        </div>
+        <a class="btn-pill btn-pill--footer" href="#/past">My Past Reflections</a>
+      </section>
+
+      <!-- My Past Reflections — Figma: 2023:40 -->
+      <section id="screen-past" class="screen screen--scroll is-hidden" data-node-id="2023:40" aria-label="My Past Reflections">
+        <header class="screen-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
+          <a class="btn-back" href="#/" aria-label="Back to home">
+            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+          </a>
+        </header>
+        <h2 class="screen-subtitle screen-subtitle--on-bg">My Past Reflections</h2>
+        <article class="reflection-card">
+          <p class="reflection-card__meta">RELEASE ✧ 3/18/2026</p>
+          <p class="reflection-card__text">
+            I’m ready to let go of the belief that I have to be perfect to be worthy, and I’m grateful it pushed me to try my best even when I was scared.
+          </p>
+        </article>
+        <article class="reflection-card">
+          <p class="reflection-card__meta">ILLUMINATE ✧ 2/17/2026</p>
+          <p class="reflection-card__text">
+            The full moon is revealing how often I shrink myself to keep the peace, and it’s helping me see a pattern of silence that I’m now ready to replace with honesty and self-trust.
+          </p>
+        </article>
+        <article class="reflection-card">
+          <p class="reflection-card__meta">ALIGN ✧ 1/18/2026</p>
+          <p class="reflection-card__text">
+            I can better align my daily actions with my highest self by choosing consistency over perfection, making small intentional choices each day that reflect who I want to become rather than who I’ve been.
+          </p>
+        </article>
+      </section>
+
+      <!-- Reflection Void — Figma: 2023:54 -->
+      <section id="screen-void" class="screen screen--scroll is-hidden" data-node-id="2023:54" aria-label="Reflection Void">
+        <header class="screen-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
+          <a class="btn-back" href="#/" aria-label="Back to home">
+            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+          </a>
+        </header>
+        <h2 class="screen-subtitle screen-subtitle--on-bg">Reflection Void…</h2>
+        <article class="void-card">
+          <p class="void-card__meta">Antlia ✧ 3/18/2026</p>
+          <p class="void-card__text">
+            I’m ready to let go of the belief that I have to be perfect to be worthy, and I’m grateful it pushed me to try my best even when I was scared.
+          </p>
+        </article>
+        <article class="void-card">
+          <p class="void-card__meta">Cetus ✧ 3/18/2026</p>
+          <p class="void-card__text">
+            I’m letting go of the anger I’ve been holding onto from the past, and I’m thankful it showed me what boundaries I need moving forward.
+          </p>
+        </article>
+        <article class="void-card">
+          <p class="void-card__meta">Virgo ✧ 3/18/2026</p>
+          <p class="void-card__text">
+            I’m ready to release the fear of failure that’s kept me small, and I’m grateful it protected me until I felt strong enough to take risks.
+          </p>
+        </article>
+      </section>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

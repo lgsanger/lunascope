@@ -1,0 +1,682 @@
+/* LUNASCOPE — tokens from Figma (LUNASCOPE-SKETCH) */
+
+@font-face {
+  font-family: "Rosalie";
+  src: url("assets/Rosalie-Regular-Trial.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-bg: #ccafe5;
+  --color-ink: #472164;
+  --color-border: #8159a0;
+  --color-muted: #b1a1be;
+  --font-display: "Rosalie", serif;
+  --font-body: "Bhavuka", serif;
+  --radius-pill: 20px;
+  --radius-back: 20px;
+  --shadow-brand: 0 4px 4px rgba(0, 0, 0, 0.25);
+  --shadow-btn: 0 4px 4px rgba(0, 0, 0, 0.25);
+  --border-thick: 3px solid var(--color-border);
+  --app-max-width: 393px;
+  /* Home: gap under title + between nav pills (same value) */
+  --space-home-rhythm: 39px;
+  /* Home moon — surface + craters (no outer ring; sits on page background) */
+  --moon-surface: #b5a7c4;
+  --moon-crater: #9487a2;
+  /* Even halo around the moon — 0 offset so glow is the same on every side */
+  --shadow-moon:
+    0 0 0 2px rgba(71, 33, 100, 0.32),
+    0 0 20px 4px rgba(71, 33, 100, 0.38),
+    0 0 40px 10px rgba(71, 33, 100, 0.3),
+    0 0 64px 18px rgba(71, 33, 100, 0.2);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body), Georgia, serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.app-root {
+  width: 100%;
+  max-width: var(--app-max-width);
+  min-height: 100dvh;
+  background: var(--color-bg);
+  position: relative;
+}
+
+/* Background stars (placed by app.js; behind all screens) */
+.starfield {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  color: var(--color-ink);
+}
+
+.starfield__star {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+}
+
+.app-root > .screen {
+  position: relative;
+  z-index: 1;
+}
+
+/* Screens */
+
+.screen {
+  min-height: 100dvh;
+  padding: 0 0 2rem;
+}
+
+.screen.is-hidden {
+  display: none;
+}
+
+.screen--home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+.screen--stack {
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+.screen--scroll {
+  padding: 1.5rem 1.25rem 2rem;
+}
+
+/* Brand */
+
+.brand-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 48px;
+  line-height: 1;
+  text-align: center;
+  color: var(--color-ink);
+  text-shadow: var(--shadow-brand);
+}
+
+.home-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.home-moon {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 0.75rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-moon__spin {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: home-moon-rotate 48s linear infinite;
+}
+
+@keyframes home-moon-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-moon__spin {
+    animation-duration: 0.001ms;
+    animation-iteration-count: 1;
+  }
+}
+
+.home-moon__disc {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--moon-surface);
+  position: relative;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset -3px 2px 8px rgba(0, 0, 0, 0.1),
+    var(--shadow-moon);
+}
+
+/* Crater dots — sizes/positions evoke the reference sketch */
+.home-moon__crater {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--moon-crater);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.home-moon__crater--a {
+  width: 28%;
+  height: 28%;
+  top: 12%;
+  right: 14%;
+}
+
+.home-moon__crater--b {
+  width: 16%;
+  height: 16%;
+  top: 38%;
+  left: 22%;
+}
+
+.home-moon__crater--c {
+  width: 14%;
+  height: 14%;
+  bottom: 18%;
+  left: 16%;
+}
+
+.home-moon__crater--d {
+  width: 5%;
+  height: 5%;
+  top: 48%;
+  left: 46%;
+}
+
+.home-moon__crater--e {
+  width: 4%;
+  height: 4%;
+  top: 52%;
+  left: 54%;
+}
+
+.home-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-home-rhythm);
+  width: 100%;
+  max-width: 270px;
+  margin-top: var(--space-home-rhythm);
+}
+
+/* Buttons */
+
+.btn-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 67px;
+  padding: 0.5rem 1rem;
+  background: var(--color-ink);
+  border: var(--border-thick);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-btn);
+  color: var(--color-muted);
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 30px;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-pill:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+/* Home nav: outline pills; solid page fill so background stars never show through */
+.home-nav .btn-pill {
+  position: relative;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--color-ink);
+  border-radius: 9999px;
+  padding: 0.75rem 1.75rem 0.85rem 1.75rem;
+  box-shadow: 0 2px 8px rgba(71, 33, 100, 0.1);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.home-nav .btn-pill:hover {
+  /* Opaque lavender tint (stars stay hidden vs translucent rgba) */
+  background-color: #d4c4e8;
+  box-shadow: 0 4px 12px rgba(71, 33, 100, 0.16);
+}
+
+.home-nav .btn-pill:active {
+  transform: scale(0.98);
+}
+
+.btn-pill--footer {
+  margin-top: auto;
+  max-width: 270px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Reflection screen: keep filled pill */
+.btn-pill.btn-pill--footer {
+  background: var(--color-ink);
+  border-color: var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-muted);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn-pill.btn-pill--footer:hover {
+  background: var(--color-ink);
+  filter: brightness(1.05);
+}
+
+.btn-pill.btn-pill--footer:active {
+  transform: none;
+}
+
+/* Inner screen header */
+
+.screen-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.btn-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 159px;
+  height: 83px;
+  background: var(--color-ink);
+  border: var(--border-thick);
+  border-radius: var(--radius-back);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn-back img {
+  display: block;
+  transform: rotate(180deg);
+}
+
+.screen-subtitle {
+  margin: 0 0 1rem;
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 30px;
+  font-weight: 400;
+  text-align: center;
+  color: var(--color-ink);
+}
+
+.screen-subtitle--on-bg {
+  margin-bottom: 0.75rem;
+}
+
+.screen-hint {
+  margin: 0 0 1.25rem;
+  font-size: 22px;
+  text-align: center;
+  color: var(--color-ink);
+  padding: 0 0.5rem;
+}
+
+/* Today: moon hero */
+
+.moon-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem 0 1.5rem;
+  min-height: 360px;
+}
+
+.moon-hero__orbit {
+  width: 326px;
+  height: 326px;
+}
+
+.moon-hero__orbit img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.moon-hero__moon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -56%);
+  width: 219px;
+  height: 227px;
+  overflow: hidden;
+}
+
+.moon-hero__moon img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.moon-hero__phase {
+  position: absolute;
+  bottom: 0.5rem;
+  margin: 0;
+  font-family: var(--font-body), Georgia, serif;
+  font-size: 26px;
+  color: var(--color-muted);
+  letter-spacing: 0.12em;
+}
+
+/* Cards */
+
+.card {
+  background: var(--color-ink);
+  border: var(--border-thick);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-btn);
+  padding: 1.25rem 1rem;
+  max-width: 270px;
+  margin: 0 auto;
+}
+
+.card--datetime {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 292px;
+}
+
+.card__label {
+  margin: 0;
+  font-size: 30px;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.card__label--left {
+  align-self: flex-start;
+  text-align: left;
+  width: 100%;
+  font-size: 25px;
+}
+
+.card__rule {
+  display: block;
+  width: 203px;
+  max-width: 100%;
+  height: auto;
+}
+
+.card__rule--narrow {
+  margin: 0.25rem 0;
+}
+
+.card__date {
+  margin: 0;
+  font-size: 35px;
+  color: var(--color-muted);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+}
+
+.card__time {
+  margin: 0;
+  font-size: 35px;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.card--prompt {
+  margin-bottom: 1rem;
+}
+
+.card__tag {
+  margin: 0 0 0.25rem;
+  font-size: 35px;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.card__body {
+  margin: 0.5rem 0 0;
+  font-size: 25px;
+  line-height: 1.35;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+.card--journal {
+  margin-bottom: 1.25rem;
+}
+
+.journal-field {
+  margin: 0.75rem 0 1rem;
+  min-height: 174px;
+  width: 100%;
+  max-width: 247px;
+  margin-left: auto;
+  margin-right: auto;
+  background: var(--color-ink);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 0.75rem;
+  color: var(--color-muted);
+  font-size: 22px;
+  outline: none;
+}
+
+.journal-field:focus {
+  box-shadow: 0 0 0 2px var(--color-border);
+}
+
+.journal-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.link-action {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 25px;
+  color: var(--color-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-action:focus-visible {
+  outline: 2px solid var(--color-muted);
+  outline-offset: 2px;
+}
+
+/* Reflection lists */
+
+.reflection-card,
+.void-card {
+  background: var(--color-ink);
+  border: var(--border-thick);
+  border-radius: var(--radius-pill);
+  padding: 1rem 1.25rem 1.25rem;
+  margin-bottom: 1rem;
+  max-width: 270px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.reflection-card__meta,
+.void-card__meta {
+  margin: 0 0 0.5rem;
+  font-size: 22px;
+  line-height: 1.3;
+  color: var(--color-muted);
+}
+
+.reflection-card__text,
+.void-card__text {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+/* Calendar wireframe */
+
+.calendar-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.calendar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.calendar-item__moon {
+  position: relative;
+  width: 326px;
+  height: 326px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-item__orbit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.calendar-item__face {
+  position: relative;
+  z-index: 1;
+  width: 219px;
+  height: auto;
+}
+
+.calendar-item__moon--simple {
+  background: var(--color-ink);
+  border-radius: 50%;
+  border: var(--border-thick);
+}
+
+.calendar-item__caption {
+  margin: 0.75rem 0 0;
+  font-size: 22px;
+  color: var(--color-ink);
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+/* Phases wireframe */
+
+.phases-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.phase-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.phase-block__moon {
+  width: 326px;
+  height: 326px;
+}
+
+.phase-block__moon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.phase-block__moon--placeholder {
+  background: var(--color-ink);
+  border-radius: 50%;
+  border: var(--border-thick);
+  opacity: 0.85;
+}
+
+.phase-block__name {
+  margin: 0.75rem 0 0;
+  font-size: 22px;
+  letter-spacing: 0.06em;
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.wireframe-note {
+  margin: 1.5rem 0 0;
+  font-size: 18px;
+  color: var(--color-ink);
+  opacity: 0.75;
+  text-align: center;
+  font-style: italic;
+}
+
+/* Reflection screen: flex footer — :not(.is-hidden) keeps this from overriding display:none */
+#screen-reflection.screen--stack:not(.is-hidden) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
