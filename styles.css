@@ -736,6 +736,26 @@ button.btn-pill {
   font-size: clamp(0.72rem, 2.35vw, 0.86rem);
 }
 
+.screen--calendar .calendar-notify__status {
+  margin: 0 0 1rem;
+  padding: 0 0.75rem;
+  max-width: min(300px, 92vw);
+  margin-left: auto;
+  margin-right: auto;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.68rem, 2.1vw, 0.78rem);
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--color-ink);
+  min-height: 1.45em;
+}
+
+.screen--calendar .calendar-notify__status:empty {
+  display: none;
+}
+
 /* Full Moon Calendar — same footprint + arc label as Today’s moon stage */
 
 .calendar-list {

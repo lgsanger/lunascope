@@ -140,11 +140,18 @@
             aria-labelledby="calendar-notify-label"
             hidden
           >
-            <button type="button" class="btn-pill calendar-notify__option">3 Days Prior</button>
-            <button type="button" class="btn-pill calendar-notify__option">2 Days Prior</button>
-            <button type="button" class="btn-pill calendar-notify__option">1 Day Prior</button>
+            <button type="button" class="btn-pill calendar-notify__option" data-lead-days="3">
+              3 Days Prior
+            </button>
+            <button type="button" class="btn-pill calendar-notify__option" data-lead-days="2">
+              2 Days Prior
+            </button>
+            <button type="button" class="btn-pill calendar-notify__option" data-lead-days="1">
+              1 Day Prior
+            </button>
           </div>
         </div>
+        <p class="calendar-notify__status" id="calendar-notify-status" aria-live="polite"></p>
         <ul class="calendar-list">
           <li class="calendar-item" aria-label="January 3, Wolf Moon">
             <div class="calendar-item__moon calendar-item__moon--wolf">

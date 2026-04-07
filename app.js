@@ -325,16 +325,12 @@
     scheduleStarfield();
     moonDrawState.key = null;
     updateRealTimeDisplays();
+    notifyScheduleRefresh();
   }
 
   window.addEventListener("hashchange", onHashChange);
 
   setInterval(updateRealTimeDisplays, 1000);
-  document.addEventListener("visibilitychange", function () {
-    if (!document.hidden) {
-      updateRealTimeDisplays();
-    }
-  });
 
   function rectRelative(el, container) {
     var er = el.getBoundingClientRect();
@@ -396,6 +392,7 @@
       ".screen-subtitle",
       ".screen-hint",
       ".calendar-notify",
+      ".calendar-notify__status",
       ".calendar-item__moon",
       ".wireframe-note",
       ".phase-block__name",
@@ -503,6 +500,219 @@
     }, 120);
   });
 
+  /* Full moon reminders — Notification API + localStorage (SunCalc-style illumination peak) */
+  var NOTIFY_STORAGE_KEY = "lunascope.fullMoonNotify.v1";
+  /* 1-day chunks: long delays exceed typical setTimeout max (~24.85 days) */
+  var NOTIFY_CHUNK_MS = 24 * 60 * 60 * 1000;
+  var moonNotifyTimerId = null;
+
+  function loadNotifyState() {
+    try {
+      var raw = localStorage.getItem(NOTIFY_STORAGE_KEY);
+      if (!raw) {
+        return null;
+      }
+      var s = JSON.parse(raw);
+      if (!s || s.v !== 1 || !s.leadDays || !s.fullMoonAt || !s.reminderAt) {
+        return null;
+      }
+      return s;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function saveNotifyState(state) {
+    try {
+      localStorage.setItem(NOTIFY_STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function formatFullMoonLine(d) {
+    var months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    return (
+      months[d.getMonth()] +
+      " " +
+      ordinalDay(d.getDate()) +
+      ", " +
+      d.getFullYear()
+    );
+  }
+
+  function findNextFullMoonPeakAfter(fromDate) {
+    var stepMs = 15 * 60 * 1000;
+    var t = fromDate.getTime() + stepMs;
+    var limit = fromDate.getTime() + 58 * moonDayMs;
+    while (t < limit) {
+      var f0 = getMoonIllumination(new Date(t - stepMs)).fraction;
+      var f1 = getMoonIllumination(new Date(t)).fraction;
+      var f2 = getMoonIllumination(new Date(t + stepMs)).fraction;
+      if (f1 >= f0 && f1 >= f2 && f1 > 0.992) {
+        return new Date(t);
+      }
+      t += stepMs;
+    }
+    return null;
+  }
+
+  function ensureFutureSchedule() {
+    var state = loadNotifyState();
+    if (!state) {
+      return;
+    }
+    var fm = new Date(state.fullMoonAt).getTime();
+    if (Date.now() < fm) {
+      return;
+    }
+    var next = findNextFullMoonPeakAfter(new Date(fm + 2 * 3600000));
+    if (!next) {
+      return;
+    }
+    state.fullMoonAt = next.toISOString();
+    state.reminderAt = new Date(
+      next.getTime() - state.leadDays * moonDayMs
+    ).toISOString();
+    state.firedForFullMoon = null;
+    saveNotifyState(state);
+  }
+
+  function clearMoonNotifyTimer() {
+    if (moonNotifyTimerId !== null) {
+      clearTimeout(moonNotifyTimerId);
+      moonNotifyTimerId = null;
+    }
+  }
+
+  function scheduleMoonNotifyTimer() {
+    clearMoonNotifyTimer();
+    var state = loadNotifyState();
+    if (!state || Notification.permission !== "granted") {
+      return;
+    }
+    ensureFutureSchedule();
+    state = loadNotifyState();
+    if (!state) {
+      return;
+    }
+    var reminderAt = new Date(state.reminderAt).getTime();
+    var now = Date.now();
+    var delay = reminderAt - now;
+    var chunk;
+    if (delay <= 0) {
+      fireFullMoonReminderIfDue();
+      ensureFutureSchedule();
+      chunk = NOTIFY_CHUNK_MS;
+    } else {
+      chunk = Math.min(delay, NOTIFY_CHUNK_MS);
+    }
+    moonNotifyTimerId = setTimeout(function () {
+      moonNotifyTimerId = null;
+      fireFullMoonReminderIfDue();
+      scheduleMoonNotifyTimer();
+    }, chunk);
+  }
+
+  function fireFullMoonReminderIfDue() {
+    if (!("Notification" in window) || Notification.permission !== "granted") {
+      return;
+    }
+    ensureFutureSchedule();
+    var state = loadNotifyState();
+    if (!state) {
+      return;
+    }
+    var reminderAt = new Date(state.reminderAt).getTime();
+    var fullMoonAt = new Date(state.fullMoonAt).getTime();
+    var now = Date.now();
+    if (now < reminderAt) {
+      return;
+    }
+    if (now >= fullMoonAt) {
+      return;
+    }
+    if (state.firedForFullMoon === state.fullMoonAt) {
+      return;
+    }
+    var when = new Date(state.fullMoonAt);
+    try {
+      new Notification("LUNASCOPE", {
+        body:
+          "Full moon on " +
+          formatFullMoonLine(when) +
+          ". You asked for a heads-up " +
+          state.leadDays +
+          " day" +
+          (state.leadDays === 1 ? "" : "s") +
+          " before.",
+        tag: "lunascope-fullmoon",
+        renotify: true,
+      });
+    } catch (e) {}
+    state.firedForFullMoon = state.fullMoonAt;
+    saveNotifyState(state);
+  }
+
+  function setNotifyStatusEl(el, message) {
+    if (!el) {
+      return;
+    }
+    el.textContent = message || "";
+  }
+
+  function refreshNotifyUi(root, statusEl) {
+    var state = loadNotifyState();
+    if (!statusEl) {
+      return;
+    }
+    if (!state) {
+      setNotifyStatusEl(statusEl, "");
+      return;
+    }
+    var fm = new Date(state.fullMoonAt);
+    var line =
+      "Reminders on: " +
+      state.leadDays +
+      " day" +
+      (state.leadDays === 1 ? "" : "s") +
+      " before the full moon (next around " +
+      formatFullMoonLine(fm) +
+      ").";
+    if (Notification.permission === "denied") {
+      line =
+        "Notifications are blocked. Enable them for this site in your browser settings to receive reminders.";
+    }
+    setNotifyStatusEl(statusEl, line);
+  }
+
+  function notifyScheduleRefresh() {
+    ensureFutureSchedule();
+    fireFullMoonReminderIfDue();
+    scheduleMoonNotifyTimer();
+    var root = document.querySelector("[data-calendar-notify]");
+    var statusEl = document.getElementById("calendar-notify-status");
+    refreshNotifyUi(root, statusEl);
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+      updateRealTimeDisplays();
+      notifyScheduleRefresh();
+    }
+  });
+
   function initCalendarNotify() {
     var root = document.querySelector("[data-calendar-notify]");
     if (!root) {
@@ -534,10 +744,97 @@
       setOpen(btn.getAttribute("aria-expanded") !== "true");
     });
 
-    var opts = root.querySelectorAll(".calendar-notify__option");
-    for (var i = 0; i < opts.length; i++) {
-      opts[i].addEventListener("click", function () {
+    var statusEl = document.getElementById("calendar-notify-status");
+
+    function requestNotificationPermissionThen(cb) {
+      if (!("Notification" in window)) {
+        cb("unsupported");
+        return;
+      }
+      var n = Notification;
+      if (n.permission === "granted") {
+        cb("granted");
+        return;
+      }
+      if (n.permission === "denied") {
+        cb("denied");
+        return;
+      }
+      try {
+        var req = n.requestPermission();
+        if (req && typeof req.then === "function") {
+          req.then(function (r) {
+            cb(r);
+          });
+        } else {
+          n.requestPermission(function (r) {
+            cb(r);
+          });
+        }
+      } catch (e) {
+        cb("denied");
+      }
+    }
+
+    function activateLeadDays(leadDays) {
+      if (!("Notification" in window)) {
+        setNotifyStatusEl(
+          statusEl,
+          "This browser does not support notifications."
+        );
         setOpen(false);
+        return;
+      }
+      function commitSchedule() {
+        var peak = findNextFullMoonPeakAfter(new Date());
+        if (!peak) {
+          setNotifyStatusEl(
+            statusEl,
+            "Could not compute the next full moon. Try again later."
+          );
+          setOpen(false);
+          return;
+        }
+        var reminder = new Date(peak.getTime() - leadDays * moonDayMs);
+        var state = {
+          v: 1,
+          leadDays: leadDays,
+          fullMoonAt: peak.toISOString(),
+          reminderAt: reminder.toISOString(),
+          firedForFullMoon: null,
+        };
+        saveNotifyState(state);
+        notifyScheduleRefresh();
+        setOpen(false);
+      }
+      requestNotificationPermissionThen(function (perm) {
+        if (perm === "granted") {
+          commitSchedule();
+          return;
+        }
+        if (perm === "denied") {
+          refreshNotifyUi(root, statusEl);
+          setOpen(false);
+          return;
+        }
+        setNotifyStatusEl(
+          statusEl,
+          "Permission was not granted. Try again when you are ready."
+        );
+        setOpen(false);
+      });
+    }
+
+    var opts = root.querySelectorAll(".calendar-notify__option");
+    for (var j = 0; j < opts.length; j++) {
+      opts[j].addEventListener("click", function (e) {
+        e.stopPropagation();
+        var raw = e.currentTarget.getAttribute("data-lead-days");
+        var lead = parseInt(raw, 10);
+        if (isNaN(lead) || lead < 1) {
+          return;
+        }
+        activateLeadDays(lead);
       });
     }
 
@@ -555,6 +852,8 @@
         setOpen(false);
       }
     });
+
+    notifyScheduleRefresh();
   }
 
   initCalendarNotify();
