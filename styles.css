@@ -575,10 +575,6 @@ button.btn-pill {
   text-align: center;
 }
 
-.card--prompt {
-  margin-bottom: 1rem;
-}
-
 .card__tag {
   margin: 0 0 0.25rem;
   font-size: 35px;
@@ -592,10 +588,6 @@ button.btn-pill {
   line-height: 1.35;
   color: var(--color-muted);
   text-align: center;
-}
-
-.card--journal {
-  margin-bottom: 1.25rem;
 }
 
 .journal-field {
@@ -616,6 +608,119 @@ button.btn-pill {
 
 .journal-field:focus {
   box-shadow: 0 0 0 2px var(--color-border);
+}
+
+/* New Moon Reflection — light lavender panels + ink type (like Today date card + calendar subtitles) */
+.screen--reflection .screen-subtitle {
+  margin: 0 0 1.25rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+
+.screen--reflection .card.card--reflection-light {
+  width: 100%;
+  max-width: min(300px, 92vw);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1.35rem 1.65rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 18px rgba(71, 33, 100, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
+}
+
+.screen--reflection .card--prompt.card--reflection-light {
+  margin-bottom: 1rem;
+}
+
+.screen--reflection .card--journal.card--reflection-light {
+  margin-bottom: 1.25rem;
+}
+
+.screen--reflection .card__tag--reflection {
+  margin: 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.screen--reflection .card__rule--reflection {
+  align-self: stretch;
+  width: auto;
+  max-width: none;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: var(--color-border);
+}
+
+.screen--reflection .card__body--reflection {
+  margin: 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.95rem, 3.2vw, 1.12rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.screen--reflection .card__label--reflection {
+  margin: 0;
+  align-self: flex-start;
+  width: 100%;
+  text-align: left;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.72rem, 2.4vw, 0.85rem);
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.screen--reflection .journal-field--reflection {
+  margin: 0.5rem 0 0.75rem;
+  min-height: 174px;
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  background: var(--color-bg);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  padding: 0.85rem 1rem;
+  color: var(--color-ink);
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.95rem, 3vw, 1.05rem);
+  line-height: 1.4;
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.screen--reflection .journal-field--reflection:focus {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 0 2px var(--color-ink);
+}
+
+.screen--reflection .reflection-past-link {
+  margin-top: auto;
+  max-width: 270px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .journal-actions {

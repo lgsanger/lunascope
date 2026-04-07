@@ -561,8 +561,8 @@
         </ol>
       </section>
 
-      <!-- Reflection Prompt — Figma: 1:5 -->
-      <section id="screen-reflection" class="screen screen--stack is-hidden" data-node-id="1:5" aria-label="Reflection Prompt">
+      <!-- Reflection Prompt — light outlined cards + Times caps (same system as calendar / Today card) -->
+      <section id="screen-reflection" class="screen screen--stack screen--reflection is-hidden" data-node-id="1:5" aria-label="Reflection Prompt">
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
@@ -571,23 +571,28 @@
             </svg>
           </a>
         </header>
-        <h2 class="screen-subtitle screen-subtitle--on-bg">New Moon Reflection</h2>
-        <div class="card card--prompt">
-          <p class="card__tag">RELEASE</p>
-          <img class="card__rule card__rule--narrow" src="https://www.figma.com/api/mcp/asset/a54f5a5e-c861-4e2d-b3c9-6baf65aefbad" alt="" width="203" height="1" />
-          <p class="card__body">
+        <h2 class="screen-subtitle">New Moon Reflection</h2>
+        <div class="card card--prompt card--reflection-light" id="reflection-prompt-card" aria-live="polite">
+          <p class="card__tag card__tag--reflection" id="reflection-prompt-tag">RELEASE</p>
+          <div class="card__rule card__rule--reflection" role="presentation"></div>
+          <p class="card__body card__body--reflection" id="reflection-prompt-body">
             What heavy emotions, limiting beliefs, or toxic situations am I ready to release with gratitude?
           </p>
         </div>
-        <div class="card card--journal">
-          <p class="card__label card__label--left">Type Here:</p>
-          <div class="journal-field" role="textbox" aria-multiline="true" contenteditable="true"></div>
+        <div class="card card--journal card--reflection-light">
+          <p class="card__label card__label--reflection">Type Here:</p>
+          <div
+            class="journal-field journal-field--reflection"
+            role="textbox"
+            aria-multiline="true"
+            contenteditable="true"
+          ></div>
           <div class="journal-actions">
             <button type="button" class="btn-pill link-action">Save Reflection</button>
             <button type="button" class="btn-pill link-action">Share Reflection</button>
           </div>
         </div>
-        <a class="btn-pill btn-pill--footer" href="#/past">My Past Reflections</a>
+        <a class="btn-pill reflection-past-link" href="#/past">My Past Reflections</a>
       </section>
 
       <!-- My Past Reflections — Figma: 2023:40 -->

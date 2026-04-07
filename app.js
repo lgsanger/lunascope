@@ -312,6 +312,137 @@
     }
   }
 
+  /* New Moon reflection — prompt advances once per actual lunation (after each new moon), not on a rolling mean-lunation clock */
+  var REFLECTION_PROMPTS = [
+    {
+      tag: "RELEASE",
+      body:
+        "What heavy emotions, limiting beliefs, or toxic situations am I ready to release with gratitude?",
+    },
+    {
+      tag: "CELEBRATE",
+      body:
+        "What am I proud of accomplishing or navigating over the last two weeks?",
+    },
+    {
+      tag: "ILLUMINATE",
+      body:
+        "What truth or hidden pattern is the light of this full moon bringing to my awareness?",
+    },
+    {
+      tag: "ALIGN",
+      body:
+        "How can I better align my daily actions with my highest self and long-term vision?",
+    },
+    {
+      tag: "FORGIVE",
+      body:
+        "Who—or what part of myself—do I need to forgive to move forward?",
+    },
+    {
+      tag: "RELATIONSHIPS",
+      body:
+        "How can I foster more authenticity and vulnerability in my partnerships?",
+    },
+    {
+      tag: "SHADOW WORK",
+      body:
+        "What fears am I avoiding, and how can I honor them instead of running from them?",
+    },
+    {
+      tag: "GROWTH",
+      body:
+        "What lessons have I learned in this lunar cycle?",
+    },
+  ];
+
+  var SYNODIC_DAY_MS = 29.530588853 * 86400000;
+  var REF_NEW_MOON_REF_MS = Date.UTC(2000, 0, 6, 18, 14, 0);
+
+  /** Most recent new moon: time of minimum illuminated fraction at or before `beforeMs`. */
+  function findLastNewMoonInstant(beforeMs) {
+    var stepCoarse = 4 * 3600000;
+    var windowMs = 42 * 24 * 3600000;
+    var start = beforeMs - 120000;
+    var minFr = 2;
+    var minT = start;
+    var t;
+    for (t = start; t > start - windowMs; t -= stepCoarse) {
+      var fr = getMoonIllumination(new Date(t)).fraction;
+      if (fr < minFr) {
+        minFr = fr;
+        minT = t;
+      }
+    }
+    var refineLo = minT - 48 * 3600000;
+    var refineHi = minT + 48 * 3600000;
+    var refineStep = 15 * 60 * 1000;
+    minFr = 2;
+    for (t = refineLo; t <= refineHi; t += refineStep) {
+      var fr2 = getMoonIllumination(new Date(t)).fraction;
+      if (fr2 < minFr) {
+        minFr = fr2;
+        minT = t;
+      }
+    }
+    return new Date(minT);
+  }
+
+  var lastNmForPromptCache = { at: 0, inst: null };
+  var LAST_NM_CACHE_MS = 90 * 1000;
+  var LAST_NM_NEAR_NEW_CACHE_MS = 12 * 1000;
+
+  function getLastNewMoonInstantForPrompt(force) {
+    var now = Date.now();
+    var fr = getMoonIllumination(new Date(now)).fraction;
+    var nearNew = fr < 0.2;
+    var maxAge = nearNew ? LAST_NM_NEAR_NEW_CACHE_MS : LAST_NM_CACHE_MS;
+    if (!force && lastNmForPromptCache.inst && now - lastNmForPromptCache.at < maxAge) {
+      return lastNmForPromptCache.inst;
+    }
+    lastNmForPromptCache.at = now;
+    lastNmForPromptCache.inst = findLastNewMoonInstant(now);
+    return lastNmForPromptCache.inst;
+  }
+
+  function reflectionPromptSerialFromLastNewMoon(lastNewMoonMs) {
+    return Math.floor((lastNewMoonMs - REF_NEW_MOON_REF_MS) / SYNODIC_DAY_MS);
+  }
+
+  var prevPromptLastNewMoonMs = null;
+
+  function updateReflectionPrompt() {
+    var tagEl = document.getElementById("reflection-prompt-tag");
+    var bodyEl = document.getElementById("reflection-prompt-body");
+    if (!tagEl || !bodyEl) {
+      return;
+    }
+    var lastNm = getLastNewMoonInstantForPrompt(true);
+    if (!lastNm) {
+      return;
+    }
+    var t = lastNm.getTime();
+    var li = reflectionPromptSerialFromLastNewMoon(t);
+    var n = REFLECTION_PROMPTS.length;
+    var idx = ((li % n) + n) % n;
+    var item = REFLECTION_PROMPTS[idx];
+    tagEl.textContent = item.tag;
+    bodyEl.textContent = item.body;
+    prevPromptLastNewMoonMs = t;
+  }
+
+  function maybeUpdateReflectionPrompt() {
+    var lastNm = getLastNewMoonInstantForPrompt(false);
+    if (!lastNm) {
+      return;
+    }
+    var t = lastNm.getTime();
+    if (prevPromptLastNewMoonMs === t) {
+      return;
+    }
+    updateReflectionPrompt();
+  }
+
   function updateRealTimeDisplays() {
     var now = new Date();
     var line1 = document.getElementById("today-date-line1");
@@ -359,6 +490,7 @@
       calHeading.textContent = now.getFullYear() + " Full Moons";
     }
     maybeUpdateTodayMoon();
+    maybeUpdateReflectionPrompt();
   }
 
   function showScreen(id) {
