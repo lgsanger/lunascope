@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="starfield" id="starfield" aria-hidden="true"></div>
     <div class="app-root">
-      <div class="starfield" id="starfield" aria-hidden="true"></div>
       <!-- Home — Figma: Home Page (1:2) -->
       <section id="screen-home" class="screen screen--home" data-node-id="1:2" aria-label="Home">
         <header class="home-header">
@@ -582,21 +582,33 @@
         <div class="card card--journal card--reflection-light">
           <p class="card__label card__label--reflection">Type Here:</p>
           <div
+            id="reflection-journal"
             class="journal-field journal-field--reflection"
             role="textbox"
             aria-multiline="true"
             contenteditable="true"
           ></div>
+          <p id="reflection-save-status" class="reflection-save-status" role="status" aria-live="polite"></p>
           <div class="journal-actions">
-            <button type="button" class="btn-pill link-action">Save Reflection</button>
-            <button type="button" class="btn-pill link-action">Share Reflection</button>
+            <button type="button" id="reflection-save-btn" class="btn-pill link-action">
+              Save Reflection
+            </button>
+            <button type="button" id="reflection-post-void-btn" class="btn-pill link-action">
+              Post to Reflection Void
+            </button>
           </div>
+          <p id="reflection-void-status" class="reflection-void-status" role="status" aria-live="polite"></p>
         </div>
         <a class="btn-pill reflection-past-link" href="#/past">My Past Reflections</a>
       </section>
 
       <!-- My Past Reflections — Figma: 2023:40 -->
-      <section id="screen-past" class="screen screen--scroll is-hidden" data-node-id="2023:40" aria-label="My Past Reflections">
+      <section
+        id="screen-past"
+        class="screen screen--scroll screen--past is-hidden"
+        data-node-id="2023:40"
+        aria-label="My Past Reflections"
+      >
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
@@ -606,28 +618,19 @@
           </a>
         </header>
         <h2 class="screen-subtitle screen-subtitle--on-bg">My Past Reflections</h2>
-        <article class="reflection-card">
-          <p class="reflection-card__meta">RELEASE ✧ 3/18/2026</p>
-          <p class="reflection-card__text">
-            I’m ready to let go of the belief that I have to be perfect to be worthy, and I’m grateful it pushed me to try my best even when I was scared.
-          </p>
-        </article>
-        <article class="reflection-card">
-          <p class="reflection-card__meta">ILLUMINATE ✧ 2/17/2026</p>
-          <p class="reflection-card__text">
-            The full moon is revealing how often I shrink myself to keep the peace, and it’s helping me see a pattern of silence that I’m now ready to replace with honesty and self-trust.
-          </p>
-        </article>
-        <article class="reflection-card">
-          <p class="reflection-card__meta">ALIGN ✧ 1/18/2026</p>
-          <p class="reflection-card__text">
-            I can better align my daily actions with my highest self by choosing consistency over perfection, making small intentional choices each day that reflect who I want to become rather than who I’ve been.
-          </p>
-        </article>
+        <p id="past-reflection-empty" class="past-reflection-empty" role="status">
+          No reflections saved yet. Write one on the Reflection Prompt page — they will appear here.
+        </p>
+        <div id="past-reflection-list" class="past-reflection-list" role="list"></div>
       </section>
 
-      <!-- Reflection Void — Figma: 2023:54 -->
-      <section id="screen-void" class="screen screen--scroll is-hidden" data-node-id="2023:54" aria-label="Reflection Void">
+      <!-- Reflection Void — anonymous posts (constellation + date), Figma: 2023:54 -->
+      <section
+        id="screen-void"
+        class="screen screen--scroll screen--void is-hidden"
+        data-node-id="2023:54"
+        aria-label="Reflection Void"
+      >
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
@@ -637,24 +640,10 @@
           </a>
         </header>
         <h2 class="screen-subtitle screen-subtitle--on-bg">Reflection Void…</h2>
-        <article class="void-card">
-          <p class="void-card__meta">Antlia ✧ 3/18/2026</p>
-          <p class="void-card__text">
-            I’m ready to let go of the belief that I have to be perfect to be worthy, and I’m grateful it pushed me to try my best even when I was scared.
-          </p>
-        </article>
-        <article class="void-card">
-          <p class="void-card__meta">Cetus ✧ 3/18/2026</p>
-          <p class="void-card__text">
-            I’m letting go of the anger I’ve been holding onto from the past, and I’m thankful it showed me what boundaries I need moving forward.
-          </p>
-        </article>
-        <article class="void-card">
-          <p class="void-card__meta">Virgo ✧ 3/18/2026</p>
-          <p class="void-card__text">
-            I’m ready to release the fear of failure that’s kept me small, and I’m grateful it protected me until I felt strong enough to take risks.
-          </p>
-        </article>
+        <p id="void-reflection-empty" class="void-reflection-empty" role="status">
+          No posts yet. From Reflection Prompt, choose “Post to Reflection Void” — your words appear here under a random constellation name, with the date you posted.
+        </p>
+        <div id="void-reflection-list" class="void-reflection-list" role="list"></div>
       </section>
     </div>
     <script src="app.js"></script>

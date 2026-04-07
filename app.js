@@ -4,7 +4,7 @@
 
   var EXCLUDE_PAD = 10;
   var TITLE_EXTRA_PAD = 8;
-  var MAX_TRIES = 160;
+  var MAX_TRIES = 220;
   var NS = "http://www.w3.org/2000/svg";
 
   var routes = {
@@ -443,6 +443,412 @@
     updateReflectionPrompt();
   }
 
+  /* Saved reflections — local archive for “My Past Reflections” */
+  var REFLECTION_ARCHIVE_KEY = "lunascope.savedReflections.v1";
+  var reflectionSaveStatusTimer = null;
+
+  function loadSavedReflections() {
+    try {
+      var raw = localStorage.getItem(REFLECTION_ARCHIVE_KEY);
+      if (!raw) {
+        return [];
+      }
+      var parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+      var out = [];
+      for (var i = 0; i < parsed.length; i++) {
+        var e = parsed[i];
+        if (e && typeof e.text === "string" && e.savedAt) {
+          out.push({
+            id: e.id || String(i),
+            tag: typeof e.tag === "string" ? e.tag : "REFLECTION",
+            text: e.text,
+            savedAt: e.savedAt,
+          });
+        }
+      }
+      return out;
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function persistSavedReflections(list) {
+    try {
+      localStorage.setItem(REFLECTION_ARCHIVE_KEY, JSON.stringify(list));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function formatReflectionDateShort(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) {
+      return "";
+    }
+    return d.getMonth() + 1 + "/" + d.getDate() + "/" + d.getFullYear();
+  }
+
+  function renderPastReflections() {
+    var listEl = document.getElementById("past-reflection-list");
+    var emptyEl = document.getElementById("past-reflection-empty");
+    if (!listEl) {
+      return;
+    }
+    var items = loadSavedReflections().slice();
+    items.sort(function (a, b) {
+      return new Date(b.savedAt).getTime() - new Date(a.savedAt).getTime();
+    });
+    listEl.innerHTML = "";
+    if (items.length === 0) {
+      if (emptyEl) {
+        emptyEl.hidden = false;
+      }
+      return;
+    }
+    if (emptyEl) {
+      emptyEl.hidden = true;
+    }
+    for (var j = 0; j < items.length; j++) {
+      var it = items[j];
+      var art = document.createElement("article");
+      art.className = "reflection-card";
+      art.setAttribute("role", "listitem");
+      var meta = document.createElement("p");
+      meta.className = "reflection-card__meta";
+      meta.textContent =
+        (it.tag || "REFLECTION") + " ✧ " + formatReflectionDateShort(it.savedAt);
+      var body = document.createElement("p");
+      body.className = "reflection-card__text";
+      body.textContent = it.text;
+      art.appendChild(meta);
+      art.appendChild(body);
+      listEl.appendChild(art);
+    }
+    scheduleStarfield();
+  }
+
+  function addPastReflectionEntry(text, tag, savedAtIso) {
+    var entry = {
+      id:
+        String(Date.now()) + "-" + Math.random().toString(36).slice(2, 10),
+      tag: (tag || "").trim() || "REFLECTION",
+      text: text,
+      savedAt: savedAtIso || new Date().toISOString(),
+    };
+    var list = loadSavedReflections();
+    list.push(entry);
+    return persistSavedReflections(list);
+  }
+
+  function saveReflectionFromEditor() {
+    var statusEl = document.getElementById("reflection-save-status");
+    var field = document.getElementById("reflection-journal");
+    var tagEl = document.getElementById("reflection-prompt-tag");
+    if (!field || !tagEl) {
+      return;
+    }
+    var text = (field.textContent || "")
+      .replace(/\r\n/g, "\n")
+      .replace(/\u00a0/g, " ")
+      .trim();
+    if (!text.length) {
+      if (statusEl) {
+        statusEl.textContent = "";
+      }
+      field.focus();
+      return;
+    }
+    if (!addPastReflectionEntry(text, tagEl.textContent, null)) {
+      if (statusEl) {
+        statusEl.textContent =
+          "Could not save — storage may be full or unavailable.";
+      }
+      return;
+    }
+    field.textContent = "";
+    scheduleStarfield();
+    if (statusEl) {
+      statusEl.textContent = "Saved.";
+      window.clearTimeout(reflectionSaveStatusTimer);
+      reflectionSaveStatusTimer = window.setTimeout(function () {
+        statusEl.textContent = "";
+      }, 2500);
+    }
+    if (getRouteId() === "past") {
+      renderPastReflections();
+    }
+  }
+
+  /* IAU constellation names (English) — random label per anonymous void post */
+  var IAU_CONSTELLATIONS = [
+    "Andromeda",
+    "Antlia",
+    "Apus",
+    "Aquarius",
+    "Aquila",
+    "Ara",
+    "Aries",
+    "Auriga",
+    "Bootes",
+    "Caelum",
+    "Camelopardalis",
+    "Cancer",
+    "Canes Venatici",
+    "Canis Major",
+    "Canis Minor",
+    "Capricornus",
+    "Carina",
+    "Cassiopeia",
+    "Centaurus",
+    "Cepheus",
+    "Cetus",
+    "Chamaeleon",
+    "Circinus",
+    "Columba",
+    "Coma Berenices",
+    "Corona Australis",
+    "Corona Borealis",
+    "Corvus",
+    "Crater",
+    "Crux",
+    "Cygnus",
+    "Delphinus",
+    "Dorado",
+    "Draco",
+    "Equuleus",
+    "Eridanus",
+    "Fornax",
+    "Gemini",
+    "Grus",
+    "Hercules",
+    "Horologium",
+    "Hydra",
+    "Hydrus",
+    "Indus",
+    "Lacerta",
+    "Leo",
+    "Leo Minor",
+    "Lepus",
+    "Libra",
+    "Lupus",
+    "Lynx",
+    "Lyra",
+    "Mensa",
+    "Microscopium",
+    "Monoceros",
+    "Musca",
+    "Norma",
+    "Octans",
+    "Ophiuchus",
+    "Orion",
+    "Pavo",
+    "Pegasus",
+    "Perseus",
+    "Phoenix",
+    "Pictor",
+    "Pisces",
+    "Piscis Austrinus",
+    "Puppis",
+    "Pyxis",
+    "Reticulum",
+    "Sagitta",
+    "Sagittarius",
+    "Scorpius",
+    "Sculptor",
+    "Scutum",
+    "Serpens",
+    "Sextans",
+    "Taurus",
+    "Telescopium",
+    "Triangulum",
+    "Triangulum Australe",
+    "Tucana",
+    "Ursa Major",
+    "Ursa Minor",
+    "Vela",
+    "Virgo",
+    "Volans",
+    "Vulpecula",
+  ];
+
+  function randomConstellationName() {
+    var a = IAU_CONSTELLATIONS;
+    return a[Math.floor(Math.random() * a.length)];
+  }
+
+  var VOID_POSTS_KEY = "lunascope.voidPosts.v1";
+  var reflectionVoidStatusTimer = null;
+
+  function loadVoidPosts() {
+    try {
+      var raw = localStorage.getItem(VOID_POSTS_KEY);
+      if (!raw) {
+        return [];
+      }
+      var parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
+      var out = [];
+      for (var i = 0; i < parsed.length; i++) {
+        var e = parsed[i];
+        if (
+          e &&
+          typeof e.text === "string" &&
+          e.postedAt &&
+          typeof e.constellation === "string"
+        ) {
+          out.push({
+            id: e.id || String(i),
+            constellation: e.constellation,
+            text: e.text,
+            postedAt: e.postedAt,
+          });
+        }
+      }
+      return out;
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function persistVoidPosts(list) {
+    try {
+      localStorage.setItem(VOID_POSTS_KEY, JSON.stringify(list));
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function renderVoidReflections() {
+    var listEl = document.getElementById("void-reflection-list");
+    var emptyEl = document.getElementById("void-reflection-empty");
+    if (!listEl) {
+      return;
+    }
+    var items = loadVoidPosts().slice();
+    items.sort(function (a, b) {
+      return new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime();
+    });
+    listEl.innerHTML = "";
+    if (items.length === 0) {
+      if (emptyEl) {
+        emptyEl.hidden = false;
+      }
+      return;
+    }
+    if (emptyEl) {
+      emptyEl.hidden = true;
+    }
+    for (var v = 0; v < items.length; v++) {
+      var it = items[v];
+      var art = document.createElement("article");
+      art.className = "void-card";
+      art.setAttribute("role", "listitem");
+      var meta = document.createElement("p");
+      meta.className = "void-card__meta";
+      meta.textContent =
+        (it.constellation || "—") +
+        " ✧ " +
+        formatReflectionDateShort(it.postedAt);
+      var body = document.createElement("p");
+      body.className = "void-card__text";
+      body.textContent = it.text;
+      art.appendChild(meta);
+      art.appendChild(body);
+      listEl.appendChild(art);
+    }
+    scheduleStarfield();
+  }
+
+  function postReflectionToVoid() {
+    var statusEl = document.getElementById("reflection-void-status");
+    var field = document.getElementById("reflection-journal");
+    var tagEl = document.getElementById("reflection-prompt-tag");
+    if (!field) {
+      return;
+    }
+    var text = (field.textContent || "")
+      .replace(/\r\n/g, "\n")
+      .replace(/\u00a0/g, " ")
+      .trim();
+    if (!text.length) {
+      if (statusEl) {
+        statusEl.textContent = "";
+      }
+      field.focus();
+      return;
+    }
+    var tag = tagEl ? (tagEl.textContent || "").trim() : "";
+    var postedAt = new Date().toISOString();
+    if (!addPastReflectionEntry(text, tag, postedAt)) {
+      if (statusEl) {
+        statusEl.textContent =
+          "Could not save — storage may be full or unavailable.";
+      }
+      return;
+    }
+    var entry = {
+      id:
+        String(Date.now()) + "-" + Math.random().toString(36).slice(2, 10),
+      constellation: randomConstellationName(),
+      text: text,
+      postedAt: postedAt,
+    };
+    var list = loadVoidPosts();
+    list.push(entry);
+    if (!persistVoidPosts(list)) {
+      if (statusEl) {
+        statusEl.textContent =
+          "Saved to My Past Reflections. Could not post to the Void.";
+      }
+      field.textContent = "";
+      scheduleStarfield();
+      window.clearTimeout(reflectionVoidStatusTimer);
+      reflectionVoidStatusTimer = window.setTimeout(function () {
+        if (statusEl) {
+          statusEl.textContent = "";
+        }
+      }, 4200);
+      if (getRouteId() === "past") {
+        renderPastReflections();
+      }
+      return;
+    }
+    field.textContent = "";
+    scheduleStarfield();
+    if (statusEl) {
+      statusEl.textContent =
+        "Posted to the Void and saved to My Past Reflections.";
+      window.clearTimeout(reflectionVoidStatusTimer);
+      reflectionVoidStatusTimer = window.setTimeout(function () {
+        statusEl.textContent = "";
+      }, 3200);
+    }
+    if (getRouteId() === "past") {
+      renderPastReflections();
+    }
+    if (getRouteId() === "void") {
+      renderVoidReflections();
+    }
+  }
+
+  function initReflectionArchive() {
+    var saveBtn = document.getElementById("reflection-save-btn");
+    var voidBtn = document.getElementById("reflection-post-void-btn");
+    if (saveBtn) {
+      saveBtn.addEventListener("click", saveReflectionFromEditor);
+    }
+    if (voidBtn) {
+      voidBtn.addEventListener("click", postReflectionToVoid);
+    }
+  }
+
   function updateRealTimeDisplays() {
     var now = new Date();
     var line1 = document.getElementById("today-date-line1");
@@ -507,12 +913,19 @@
   }
 
   function onHashChange() {
-    showScreen(getRouteId());
+    var route = getRouteId();
+    showScreen(route);
     scheduleStarfield();
     moonDrawState.key = null;
     updateRealTimeDisplays();
     notifyScheduleRefresh();
     initPhaseIllustrations();
+    if (route === "past") {
+      renderPastReflections();
+    }
+    if (route === "void") {
+      renderVoidReflections();
+    }
   }
 
   window.addEventListener("hashchange", onHashChange);
@@ -574,6 +987,7 @@
       rects.push(expandRect(tr, EXCLUDE_PAD + TITLE_EXTRA_PAD));
     }
     /* Keep sparkles out from behind typography and controls (all routes) */
+    /* Exclude actual text/controls only — not list wrappers (those blocked gaps between cards) */
     var textUiSelectors = [
       ".btn-back",
       ".screen-subtitle",
@@ -582,15 +996,34 @@
       ".calendar-notify__status",
       ".calendar-item__moon",
       ".wireframe-note",
+      ".phase-item",
       ".phase-item__moon",
       ".reflection-card",
       ".void-card",
       ".card",
       ".today-moon__stage",
       ".journal-field",
+      ".screen-header",
+      ".home-header",
+      ".home-nav",
+      ".btn-pill",
+      ".link-action",
+      ".reflection-past-link",
+      ".today-moon",
+      ".card--datetime-today",
     ];
     for (var s = 0; s < textUiSelectors.length; s++) {
       pushExcludeSelector(rects, starfield, textUiSelectors[s], 6);
+    }
+    /* Long copy blocks + status lines — extra breathing room for legibility */
+    var textBlockSelectors = [
+      ".past-reflection-empty",
+      ".void-reflection-empty",
+      ".reflection-save-status",
+      ".reflection-void-status",
+    ];
+    for (var t = 0; t < textBlockSelectors.length; t++) {
+      pushExcludeSelector(rects, starfield, textBlockSelectors[t], 16);
     }
     return rects;
   }
@@ -620,7 +1053,16 @@
     var reduce =
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var targetCount = reduce ? 32 : 88;
+    /* Scale count with viewport area so wide/tall screens stay filled */
+    var referenceArea = 280000;
+    var baseStars = reduce ? 32 : 88;
+    var targetCount = Math.round((baseStars * (w * h)) / referenceArea);
+    if (targetCount < (reduce ? 22 : 56)) {
+      targetCount = reduce ? 22 : 56;
+    }
+    if (targetCount > (reduce ? 44 : 300)) {
+      targetCount = reduce ? 44 : 300;
+    }
 
     starfield.textContent = "";
 
@@ -1045,6 +1487,7 @@
   }
 
   initCalendarNotify();
+  initReflectionArchive();
 
   onHashChange();
 })();

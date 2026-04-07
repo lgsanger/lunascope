@@ -54,6 +54,8 @@ body {
 body {
   display: flex;
   justify-content: center;
+  position: relative;
+  min-height: 100dvh;
 }
 
 .app-root {
@@ -62,12 +64,17 @@ body {
   min-height: 100dvh;
   background: var(--color-bg);
   position: relative;
+  z-index: 1;
 }
 
-/* Background stars (placed by app.js; behind all screens) */
+/* Full-bleed background stars: document height (scrolls with page) × full browser width */
 .starfield {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  top: 0;
+  bottom: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
@@ -723,45 +730,147 @@ button.btn-pill {
   margin-right: auto;
 }
 
+.reflection-save-status {
+  min-height: 1.35em;
+  margin: 0.35rem 0 0.25rem;
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.72rem, 2.3vw, 0.85rem);
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
+.reflection-void-status {
+  min-height: 1.35em;
+  margin: 0.6rem auto 0;
+  max-width: min(300px, 92vw);
+  text-align: center;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.72rem, 2.3vw, 0.85rem);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+
 .journal-actions {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  max-width: 270px;
+  max-width: min(300px, 92vw);
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Reflection lists */
+/* My Past Reflections — same Times + tracking system as New Moon Reflection cards */
 
-.reflection-card,
-.void-card {
-  background: var(--color-ink);
-  border: var(--border-thick);
-  border-radius: var(--radius-pill);
-  padding: 1rem 1.25rem 1.25rem;
+#screen-past .screen-subtitle {
+  margin: 0 0 1.25rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+
+.past-reflection-empty {
+  margin: 0 auto 1.25rem;
+  max-width: min(300px, 92vw);
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.88rem, 2.8vw, 1rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.past-reflection-empty[hidden] {
+  display: none !important;
+}
+
+#screen-past .past-reflection-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Saved reflections + Reflection Void posts — identical card, type, and color */
+#screen-past .reflection-card,
+#screen-void .void-card {
+  width: 100%;
+  max-width: min(300px, 92vw);
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 1rem;
-  max-width: 270px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 1.5rem 1.35rem 1.65rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 6px 18px rgba(71, 33, 100, 0.12);
 }
 
-.reflection-card__meta,
-.void-card__meta {
-  margin: 0 0 0.5rem;
-  font-size: 22px;
-  line-height: 1.3;
-  color: var(--color-muted);
+#screen-past .reflection-card__meta,
+#screen-void .void-card__meta {
+  margin: 0 0 0.65rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--color-ink);
+  word-break: break-word;
 }
 
-.reflection-card__text,
-.void-card__text {
+#screen-past .reflection-card__text,
+#screen-void .void-card__text {
   margin: 0;
-  font-size: 22px;
-  line-height: 1.4;
-  color: var(--color-muted);
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.95rem, 3.2vw, 1.12rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-ink);
+  text-align: left;
+}
+
+/* Reflection Void — page chrome matches Past; post cards shared above */
+
+#screen-void .screen-subtitle {
+  margin: 0 0 1.25rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+
+.void-reflection-empty {
+  margin: 0 auto 1.25rem;
+  max-width: min(300px, 92vw);
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.88rem, 2.8vw, 1rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-ink);
+  text-align: center;
+}
+
+.void-reflection-empty[hidden] {
+  display: none !important;
+}
+
+#screen-void .void-reflection-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 }
 
 /* Full Moon Calendar — same Times + tracking as home nav & Today DATE AND TIME */
