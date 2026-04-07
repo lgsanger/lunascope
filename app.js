@@ -683,6 +683,98 @@
   var VOID_POSTS_KEY = "lunascope.voidPosts.v1";
   var reflectionVoidStatusTimer = null;
 
+  var VOID_EMPTY_COPY =
+    "No posts yet. From Reflection Prompt, choose \u201cPost to Reflection Void\u201d \u2014 your words appear here under a random constellation name, with the date you posted.";
+
+  function getVoidRemoteConfig() {
+    var c = typeof window !== "undefined" && window.LUNASCOPE_VOID;
+    if (!c || !c.supabaseUrl || !c.supabaseAnonKey) {
+      return null;
+    }
+    var url = String(c.supabaseUrl).trim();
+    var key = String(c.supabaseAnonKey).trim();
+    if (!url || !key) {
+      return null;
+    }
+    return { supabaseUrl: url, supabaseAnonKey: key };
+  }
+
+  function fetchVoidPostsRemote(cfg, done) {
+    var base = cfg.supabaseUrl.replace(/\/$/, "");
+    var reqUrl =
+      base +
+      "/rest/v1/void_posts?select=id,constellation,body,posted_at&order=posted_at.desc";
+    fetch(reqUrl, {
+      method: "GET",
+      headers: {
+        apikey: cfg.supabaseAnonKey,
+        Authorization: "Bearer " + cfg.supabaseAnonKey,
+        Accept: "application/json",
+      },
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          throw new Error("void fetch " + res.status);
+        }
+        return res.json();
+      })
+      .then(function (rows) {
+        if (!Array.isArray(rows)) {
+          done(new Error("void bad payload"), null);
+          return;
+        }
+        var items = [];
+        for (var i = 0; i < rows.length; i++) {
+          var r = rows[i];
+          if (
+            r &&
+            typeof r.body === "string" &&
+            r.posted_at &&
+            typeof r.constellation === "string"
+          ) {
+            items.push({
+              id: r.id,
+              constellation: r.constellation,
+              text: r.body,
+              postedAt: r.posted_at,
+            });
+          }
+        }
+        done(null, items);
+      })
+      .catch(function (e) {
+        done(e, null);
+      });
+  }
+
+  function insertVoidPostRemote(cfg, entry, done) {
+    var base = cfg.supabaseUrl.replace(/\/$/, "");
+    var reqUrl = base + "/rest/v1/void_posts";
+    fetch(reqUrl, {
+      method: "POST",
+      headers: {
+        apikey: cfg.supabaseAnonKey,
+        Authorization: "Bearer " + cfg.supabaseAnonKey,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        constellation: entry.constellation,
+        body: entry.text,
+        posted_at: entry.postedAt,
+      }),
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          throw new Error("void insert " + res.status);
+        }
+        done(null);
+      })
+      .catch(function (e) {
+        done(e);
+      });
+  }
+
   function loadVoidPosts() {
     try {
       var raw = localStorage.getItem(VOID_POSTS_KEY);
@@ -725,14 +817,8 @@
     }
   }
 
-  function renderVoidReflections() {
-    var listEl = document.getElementById("void-reflection-list");
-    var emptyEl = document.getElementById("void-reflection-empty");
-    if (!listEl) {
-      return;
-    }
-    var items = loadVoidPosts().slice();
-    items.sort(function (a, b) {
+  function renderVoidListIntoDom(items, listEl, emptyEl) {
+    items = items.slice().sort(function (a, b) {
       return new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime();
     });
     listEl.innerHTML = "";
@@ -740,6 +826,7 @@
       if (emptyEl) {
         emptyEl.hidden = false;
       }
+      scheduleStarfield();
       return;
     }
     if (emptyEl) {
@@ -764,6 +851,52 @@
       listEl.appendChild(art);
     }
     scheduleStarfield();
+  }
+
+  function renderVoidReflections() {
+    var listEl = document.getElementById("void-reflection-list");
+    var emptyEl = document.getElementById("void-reflection-empty");
+    if (!listEl) {
+      return;
+    }
+    var cfg = getVoidRemoteConfig();
+    if (cfg) {
+      if (emptyEl) {
+        emptyEl.hidden = false;
+        emptyEl.textContent = "Loading reflections…";
+      }
+      listEl.innerHTML = "";
+      fetchVoidPostsRemote(cfg, function (err, items) {
+        if (err) {
+          var local = loadVoidPosts();
+          if (local.length === 0) {
+            if (emptyEl) {
+              emptyEl.hidden = false;
+              emptyEl.textContent =
+                "Could not load shared reflections. Check config.js (Supabase) or try again later.";
+            }
+            listEl.innerHTML = "";
+          } else {
+            if (emptyEl) {
+              emptyEl.textContent = VOID_EMPTY_COPY;
+              emptyEl.hidden = true;
+            }
+            renderVoidListIntoDom(local, listEl, emptyEl);
+          }
+          scheduleStarfield();
+          return;
+        }
+        if (emptyEl) {
+          emptyEl.textContent = VOID_EMPTY_COPY;
+        }
+        renderVoidListIntoDom(items || [], listEl, emptyEl);
+      });
+      return;
+    }
+    if (emptyEl) {
+      emptyEl.textContent = VOID_EMPTY_COPY;
+    }
+    renderVoidListIntoDom(loadVoidPosts(), listEl, emptyEl);
   }
 
   function postReflectionToVoid() {
@@ -794,14 +927,58 @@
       return;
     }
     var entry = {
-      id:
-        String(Date.now()) + "-" + Math.random().toString(36).slice(2, 10),
       constellation: randomConstellationName(),
       text: text,
       postedAt: postedAt,
     };
+    var cfg = getVoidRemoteConfig();
+    if (cfg) {
+      insertVoidPostRemote(cfg, entry, function (err) {
+        if (err) {
+          if (statusEl) {
+            statusEl.textContent =
+              "Saved to My Past Reflections. Could not post to the shared Void.";
+          }
+          field.textContent = "";
+          scheduleStarfield();
+          window.clearTimeout(reflectionVoidStatusTimer);
+          reflectionVoidStatusTimer = window.setTimeout(function () {
+            if (statusEl) {
+              statusEl.textContent = "";
+            }
+          }, 4200);
+          if (getRouteId() === "past") {
+            renderPastReflections();
+          }
+          return;
+        }
+        field.textContent = "";
+        scheduleStarfield();
+        if (statusEl) {
+          statusEl.textContent =
+            "Posted to the shared Void and saved to My Past Reflections.";
+          window.clearTimeout(reflectionVoidStatusTimer);
+          reflectionVoidStatusTimer = window.setTimeout(function () {
+            statusEl.textContent = "";
+          }, 3200);
+        }
+        if (getRouteId() === "past") {
+          renderPastReflections();
+        }
+        if (getRouteId() === "void") {
+          renderVoidReflections();
+        }
+      });
+      return;
+    }
     var list = loadVoidPosts();
-    list.push(entry);
+    list.push({
+      id:
+        String(Date.now()) + "-" + Math.random().toString(36).slice(2, 10),
+      constellation: entry.constellation,
+      text: entry.text,
+      postedAt: entry.postedAt,
+    });
     if (!persistVoidPosts(list)) {
       if (statusEl) {
         statusEl.textContent =
