@@ -149,7 +149,7 @@
   }
 
   function layoutTodayMoonCanvas(canvas) {
-    var wrap = canvas.parentElement;
+    var wrap = canvas.closest(".today-moon__image");
     if (!wrap) {
       return;
     }
@@ -221,6 +221,60 @@
     drawMoonCraters(ctx, cx, cy, r);
     ctx.globalAlpha = 1;
     ctx.restore();
+  }
+
+  var phaseIlluminationCache = {};
+
+  function illuminationForPhaseLabel(wantLabel) {
+    if (phaseIlluminationCache[wantLabel]) {
+      return phaseIlluminationCache[wantLabel];
+    }
+    var t0 = new Date(2025, 0, 1).getTime();
+    var t1 = new Date(2028, 0, 1).getTime();
+    var step = 3 * 3600000;
+    for (var t = t0; t < t1; t += step) {
+      var d = new Date(t);
+      var ill = getMoonIllumination(d);
+      if (moonPhaseLabel(ill.phase) === wantLabel) {
+        phaseIlluminationCache[wantLabel] = ill;
+        return ill;
+      }
+    }
+    var fb = getMoonIllumination(new Date());
+    phaseIlluminationCache[wantLabel] = fb;
+    return fb;
+  }
+
+  function layoutPhaseCanvas(canvas) {
+    var wrap = canvas.closest(".phase-item__inner");
+    if (!wrap) {
+      return;
+    }
+    var rect = wrap.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    var side = Math.max(2, Math.floor(rect.width * dpr));
+    canvas.width = side;
+    canvas.height = side;
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.width + "px";
+  }
+
+  function initPhaseIllustrations() {
+    var root = document.getElementById("screen-phases");
+    if (!root || root.classList.contains("is-hidden")) {
+      return;
+    }
+    var canvases = root.querySelectorAll(".phase-item__canvas");
+    for (var i = 0; i < canvases.length; i++) {
+      var c = canvases[i];
+      var lbl = c.getAttribute("data-phase-label");
+      if (!lbl) {
+        continue;
+      }
+      var ill = illuminationForPhaseLabel(lbl);
+      layoutPhaseCanvas(c);
+      drawTodayMoonCanvas(c, ill);
+    }
   }
 
   function maybeUpdateTodayMoon() {
@@ -326,6 +380,7 @@
     moonDrawState.key = null;
     updateRealTimeDisplays();
     notifyScheduleRefresh();
+    initPhaseIllustrations();
   }
 
   window.addEventListener("hashchange", onHashChange);
@@ -395,7 +450,7 @@
       ".calendar-notify__status",
       ".calendar-item__moon",
       ".wireframe-note",
-      ".phase-block__name",
+      ".phase-item__moon",
       ".reflection-card",
       ".void-card",
       ".card",
@@ -497,6 +552,7 @@
       scheduleStarfield();
       moonDrawState.key = null;
       maybeUpdateTodayMoon();
+      initPhaseIllustrations();
     }, 120);
   });
 

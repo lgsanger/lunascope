@@ -57,13 +57,15 @@
         <div class="today-moon">
           <div class="today-moon__stage">
             <div class="today-moon__image">
-              <canvas
-                id="today-moon-canvas"
-                class="today-moon__canvas"
-                width="400"
-                height="400"
-                aria-hidden="true"
-              ></canvas>
+              <div class="today-moon__spin">
+                <canvas
+                  id="today-moon-canvas"
+                  class="today-moon__canvas"
+                  width="400"
+                  height="400"
+                  aria-hidden="true"
+                ></canvas>
+              </div>
             </div>
             <svg class="today-moon__phase-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
               <defs>
@@ -360,8 +362,8 @@
         </ul>
       </section>
 
-      <!-- Phases of the Moon — Figma: 2023:26 (wireframe excerpt) -->
-      <section id="screen-phases" class="screen screen--scroll is-hidden" data-node-id="2023:26" aria-label="Phases of the Moon">
+      <!-- Phases of the Moon — same moon stage + arc type as Full Moon Calendar; canvas uses live phase geometry -->
+      <section id="screen-phases" class="screen screen--scroll screen--phases is-hidden" data-node-id="2023:26" aria-label="Phases of the Moon">
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
@@ -372,22 +374,191 @@
         </header>
         <h2 class="screen-subtitle">Phases of the Moon</h2>
         <ol class="phases-list">
-          <li class="phase-block">
-            <div class="phase-block__moon">
-              <img src="https://www.figma.com/api/mcp/asset/b927f68f-3854-4b5b-9135-3acba0fc4335" alt="" width="326" height="326" />
+          <li class="phase-item" aria-label="Waning crescent">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="WANING CRESCENT"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-01" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-01" startOffset="50%" text-anchor="middle">WANING CRESCENT</textPath>
+                </text>
+              </svg>
             </div>
-            <p class="phase-block__name">WANING CRESCENT</p>
           </li>
-          <li class="phase-block">
-            <div class="phase-block__moon phase-block__moon--placeholder"></div>
-            <p class="phase-block__name">THIRD QUARTER</p>
+          <li class="phase-item" aria-label="Third quarter">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="LAST QUARTER"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-02" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-02" startOffset="50%" text-anchor="middle">THIRD QUARTER</textPath>
+                </text>
+              </svg>
+            </div>
           </li>
-          <li class="phase-block">
-            <div class="phase-block__moon phase-block__moon--placeholder"></div>
-            <p class="phase-block__name">FULL MOON</p>
+          <li class="phase-item" aria-label="Waning gibbous">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="WANING GIBBOUS"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-03" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-03" startOffset="50%" text-anchor="middle">WANING GIBBOUS</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="phase-item" aria-label="Full moon">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="FULL MOON"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-04" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-04" startOffset="50%" text-anchor="middle">FULL MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="phase-item" aria-label="Waxing gibbous">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="WAXING GIBBOUS"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-05" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-05" startOffset="50%" text-anchor="middle">WAXING GIBBOUS</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="phase-item" aria-label="First quarter">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="FIRST QUARTER"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-06" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-06" startOffset="50%" text-anchor="middle">FIRST QUARTER</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="phase-item" aria-label="Waxing crescent">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="WAXING CRESCENT"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-07" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-07" startOffset="50%" text-anchor="middle">WAXING CRESCENT</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="phase-item" aria-label="New moon">
+            <div class="phase-item__moon">
+              <div class="phase-item__inner">
+                <div class="phase-item__spin">
+                  <canvas
+                    class="phase-item__canvas"
+                    data-phase-label="NEW MOON"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
+              </div>
+              <svg class="phase-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="phase-moon-arc-08" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="phase-item__label-text">
+                  <textPath href="#phase-moon-arc-08" startOffset="50%" text-anchor="middle">NEW MOON</textPath>
+                </text>
+              </svg>
+            </div>
           </li>
         </ol>
-        <p class="wireframe-note">Wireframe: full vertical sequence is in the Figma artboard.</p>
       </section>
 
       <!-- Reflection Prompt — Figma: 1:5 -->
