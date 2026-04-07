@@ -27,6 +27,286 @@
     return routes.hasOwnProperty(path) ? routes[path] : "home";
   }
 
+  function ordinalDay(n) {
+    var j = n % 10;
+    var k = n % 100;
+    if (k >= 11 && k <= 13) {
+      return n + "th";
+    }
+    if (j === 1) {
+      return n + "st";
+    }
+    if (j === 2) {
+      return n + "nd";
+    }
+    if (j === 3) {
+      return n + "rd";
+    }
+    return n + "th";
+  }
+
+  function pad2(n) {
+    return n < 10 ? "0" + n : String(n);
+  }
+
+  /* Moon illumination — formulas from SunCalc (MIT, github.com/mourner/suncalc) */
+  var moonDayMs = 1000 * 60 * 60 * 24;
+  var J1970 = 2440588;
+  var J2000 = 2451545;
+  var oblE = (Math.PI / 180) * 23.4397;
+
+  function toJulian(date) {
+    return date.valueOf() / moonDayMs - 0.5 + J1970;
+  }
+  function toDays(date) {
+    return toJulian(date) - J2000;
+  }
+  function rightAscension(l, b) {
+    return Math.atan2(
+      Math.sin(l) * Math.cos(oblE) - Math.tan(b) * Math.sin(oblE),
+      Math.cos(l)
+    );
+  }
+  function declination(l, b) {
+    return Math.asin(
+      Math.sin(b) * Math.cos(oblE) + Math.cos(b) * Math.sin(oblE) * Math.sin(l)
+    );
+  }
+  function sunCoords(d) {
+    var M = (Math.PI / 180) * (357.5291 + 0.98560028 * d);
+    var C =
+      (Math.PI / 180) *
+      (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M));
+    var P = (Math.PI / 180) * 102.9372;
+    var L = M + C + P + Math.PI;
+    return { dec: declination(L, 0), ra: rightAscension(L, 0) };
+  }
+  function moonCoords(d) {
+    var L = (Math.PI / 180) * (218.316 + 13.176396 * d);
+    var M = (Math.PI / 180) * (134.963 + 13.064993 * d);
+    var F = (Math.PI / 180) * (93.272 + 13.22935 * d);
+    var l = L + (Math.PI / 180) * 6.289 * Math.sin(M);
+    var b = (Math.PI / 180) * 5.128 * Math.sin(F);
+    var dt = 385001 - 20905 * Math.cos(M);
+    return { ra: rightAscension(l, b), dec: declination(l, b), dist: dt };
+  }
+  var earthSunKm = 149598000;
+  function getMoonIllumination(date) {
+    var d = toDays(date || new Date());
+    var s = sunCoords(d);
+    var m = moonCoords(d);
+    var phi = Math.acos(
+      Math.sin(s.dec) * Math.sin(m.dec) +
+        Math.cos(s.dec) * Math.cos(m.dec) * Math.cos(s.ra - m.ra)
+    );
+    var inc = Math.atan2(
+      earthSunKm * Math.sin(phi),
+      m.dist - earthSunKm * Math.cos(phi)
+    );
+    var angle = Math.atan2(
+      Math.cos(s.dec) * Math.sin(s.ra - m.ra),
+      Math.sin(s.dec) * Math.cos(m.dec) -
+        Math.cos(s.dec) * Math.sin(m.dec) * Math.cos(s.ra - m.ra)
+    );
+    return {
+      fraction: (1 + Math.cos(inc)) / 2,
+      phase:
+        0.5 + (0.5 * inc * (angle < 0 ? -1 : 1)) / Math.PI,
+      angle: angle,
+    };
+  }
+
+  var MOON_LIT = "#b5a7c4";
+  var MOON_SHADOW = "#6d6282";
+  var MOON_CRATER = "#9487a2";
+
+  var moonDrawState = { key: null, boxW: -1 };
+
+  function moonPhaseLabel(phase) {
+    var p = phase - Math.floor(phase);
+    if (p < 0.03 || p > 0.97) {
+      return "NEW MOON";
+    }
+    if (p < 0.22) {
+      return "WAXING CRESCENT";
+    }
+    if (p < 0.28) {
+      return "FIRST QUARTER";
+    }
+    if (p < 0.47) {
+      return "WAXING GIBBOUS";
+    }
+    if (p < 0.53) {
+      return "FULL MOON";
+    }
+    if (p < 0.72) {
+      return "WANING GIBBOUS";
+    }
+    if (p < 0.78) {
+      return "LAST QUARTER";
+    }
+    return "WANING CRESCENT";
+  }
+
+  function layoutTodayMoonCanvas(canvas) {
+    var wrap = canvas.parentElement;
+    if (!wrap) {
+      return;
+    }
+    var rect = wrap.getBoundingClientRect();
+    var dpr = window.devicePixelRatio || 1;
+    var side = Math.max(2, Math.floor(rect.width * dpr));
+    canvas.width = side;
+    canvas.height = side;
+    canvas.style.width = rect.width + "px";
+    canvas.style.height = rect.width + "px";
+  }
+
+  function drawMoonCraters(ctx, cx, cy, r) {
+    ctx.fillStyle = MOON_CRATER;
+    var spots = [
+      { dx: 0.34, dy: -0.32, rr: 0.14 },
+      { dx: -0.2, dy: 0.06, rr: 0.08 },
+      { dx: -0.22, dy: 0.34, rr: 0.07 },
+      { dx: 0.02, dy: 0.02, rr: 0.025 },
+      { dx: 0.08, dy: 0.08, rr: 0.02 },
+    ];
+    for (var i = 0; i < spots.length; i++) {
+      var s = spots[i];
+      ctx.beginPath();
+      ctx.arc(cx + s.dx * r, cy + s.dy * r, s.rr * r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawTodayMoonCanvas(canvas, ill) {
+    var ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+    var w = canvas.width;
+    var h = canvas.height;
+    var cx = w / 2;
+    var cy = h / 2;
+    var r = Math.min(w, h) * 0.48;
+    var k = ill.fraction;
+    var waxing = ill.phase < 0.5;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(-ill.angle);
+    ctx.translate(-cx, -cy);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.fillStyle = MOON_SHADOW;
+    ctx.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+    ctx.fillStyle = MOON_LIT;
+    var xt;
+    if (waxing) {
+      xt = cx + (1 - 2 * k) * r;
+      var rw = cx + r - xt;
+      if (rw > 0) {
+        ctx.fillRect(xt, cy - r, rw, 2 * r);
+      }
+    } else {
+      xt = cx + (2 * k - 1) * r;
+      var rw2 = xt - (cx - r);
+      if (rw2 > 0) {
+        ctx.fillRect(cx - r, cy - r, rw2, 2 * r);
+      }
+    }
+    ctx.globalAlpha = 0.5;
+    drawMoonCraters(ctx, cx, cy, r);
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  function maybeUpdateTodayMoon() {
+    var canvas = document.getElementById("today-moon-canvas");
+    if (!canvas) {
+      return;
+    }
+    var wrap = canvas.closest(".today-moon__image");
+    if (!wrap) {
+      return;
+    }
+    var bw = wrap.getBoundingClientRect().width;
+    var now = new Date();
+    var key =
+      now.getFullYear() +
+      "-" +
+      now.getMonth() +
+      "-" +
+      now.getDate() +
+      "-" +
+      now.getHours() +
+      "-" +
+      now.getMinutes();
+    if (moonDrawState.key === key && Math.abs(bw - moonDrawState.boxW) < 0.5) {
+      return;
+    }
+    moonDrawState.key = key;
+    moonDrawState.boxW = bw;
+    layoutTodayMoonCanvas(canvas);
+    var ill = getMoonIllumination(now);
+    drawTodayMoonCanvas(canvas, ill);
+    var label = document.getElementById("today-phase-label");
+    if (label) {
+      label.textContent = moonPhaseLabel(ill.phase);
+    }
+  }
+
+  function updateRealTimeDisplays() {
+    var now = new Date();
+    var line1 = document.getElementById("today-date-line1");
+    var line2 = document.getElementById("today-date-line2");
+    var timeEl = document.getElementById("today-time");
+    if (line1 && line2) {
+      var weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      var months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      var w = weekdays[now.getDay()];
+      var mon = months[now.getMonth()];
+      line1.textContent = w + ", " + mon + " " + ordinalDay(now.getDate());
+      line2.textContent = String(now.getFullYear());
+    }
+    if (timeEl) {
+      var h = now.getHours();
+      var h12 = h % 12;
+      if (h12 === 0) {
+        h12 = 12;
+      }
+      var ampm = h >= 12 ? "PM" : "AM";
+      timeEl.textContent =
+        pad2(h12) +
+        ":" +
+        pad2(now.getMinutes()) +
+        ":" +
+        pad2(now.getSeconds()) +
+        " " +
+        ampm;
+    }
+    var calHeading = document.getElementById("calendar-year-heading");
+    if (calHeading) {
+      calHeading.textContent = now.getFullYear() + " Full Moons";
+    }
+    maybeUpdateTodayMoon();
+  }
+
   function showScreen(id) {
     var screens = document.querySelectorAll(".screen");
     for (var i = 0; i < screens.length; i++) {
@@ -43,9 +323,18 @@
   function onHashChange() {
     showScreen(getRouteId());
     scheduleStarfield();
+    moonDrawState.key = null;
+    updateRealTimeDisplays();
   }
 
   window.addEventListener("hashchange", onHashChange);
+
+  setInterval(updateRealTimeDisplays, 1000);
+  document.addEventListener("visibilitychange", function () {
+    if (!document.hidden) {
+      updateRealTimeDisplays();
+    }
+  });
 
   function rectRelative(el, container) {
     var er = el.getBoundingClientRect();
@@ -177,7 +466,11 @@
 
   window.addEventListener("resize", function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(scheduleStarfield, 120);
+    resizeTimer = setTimeout(function () {
+      scheduleStarfield();
+      moonDrawState.key = null;
+      maybeUpdateTodayMoon();
+    }, 120);
   });
 
   onHashChange();
