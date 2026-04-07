@@ -43,8 +43,9 @@
 
       <!-- Today’s Moon Phase — Figma: 1:3 (centered back → moon disc → date card) -->
       <section id="screen-today" class="screen screen--stack screen--today is-hidden" data-node-id="1:3" aria-label="Today’s Moon Phase">
-        <header class="today-header">
-          <a class="btn-back btn-back--today" href="#/" aria-label="Back to home">
+        <header class="screen-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
+          <a class="btn-back" href="#/" aria-label="Back to home">
             <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path
                 fill="currentColor"
@@ -69,7 +70,7 @@
                 <path
                   id="today-moon-phase-arc"
                   fill="none"
-                  d="M 44 178 A 116 116 0 0 0 276 178"
+                  d="M 24 160 A 136 136 0 0 1 296 160"
                 />
               </defs>
               <text class="today-moon__phase-text">
@@ -98,36 +99,258 @@
       </section>
 
       <!-- Full Moon Calendar — Figma: 2023:12 (wireframe excerpt) -->
-      <section id="screen-calendar" class="screen screen--scroll is-hidden" data-node-id="2023:12" aria-label="Full Moon Calendar">
+      <section id="screen-calendar" class="screen screen--scroll screen--calendar is-hidden" data-node-id="2023:12" aria-label="Full Moon Calendar">
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
-            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+            </svg>
           </a>
         </header>
         <h2 id="calendar-year-heading" class="screen-subtitle"></h2>
         <p class="screen-hint">Click to enable notifications for the next full moon</p>
+        <div class="calendar-notify" data-calendar-notify>
+          <button
+            type="button"
+            class="btn-pill calendar-notify__toggle"
+            id="calendar-notify-label"
+            aria-expanded="false"
+            aria-controls="calendar-notify-panel"
+          >
+            <span class="calendar-notify__toggle-text">NOTIFY ME</span>
+            <svg
+              class="calendar-notify__chevron"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                fill="currentColor"
+                d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+              />
+            </svg>
+          </button>
+          <div
+            class="calendar-notify__panel"
+            id="calendar-notify-panel"
+            role="group"
+            aria-labelledby="calendar-notify-label"
+            hidden
+          >
+            <button type="button" class="btn-pill calendar-notify__option">3 Days Prior</button>
+            <button type="button" class="btn-pill calendar-notify__option">2 Days Prior</button>
+            <button type="button" class="btn-pill calendar-notify__option">1 Day Prior</button>
+          </div>
+        </div>
         <ul class="calendar-list">
-          <li class="calendar-item">
-            <div class="calendar-item__moon">
-              <img class="calendar-item__orbit" src="https://www.figma.com/api/mcp/asset/b927f68f-3854-4b5b-9135-3acba0fc4335" alt="" width="326" height="326" />
-              <img class="calendar-item__face" src="https://www.figma.com/api/mcp/asset/91226529-d407-46ed-8d3f-0fc22d739783" alt="" width="219" height="227" />
+          <li class="calendar-item" aria-label="January 3, Wolf Moon">
+            <div class="calendar-item__moon calendar-item__moon--wolf">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-01" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-01" startOffset="50%" text-anchor="middle">JAN 3RD — WOLF MOON</textPath>
+                </text>
+              </svg>
             </div>
-            <p class="calendar-item__caption">JAN 3RD — WOLF MOON</p>
           </li>
-          <li class="calendar-item">
-            <div class="calendar-item__moon calendar-item__moon--simple"></div>
-            <p class="calendar-item__caption">FEB 1ST — SNOW MOON</p>
-          </li>
-          <li class="calendar-item">
-            <div class="calendar-item__moon">
-              <img class="calendar-item__orbit" src="https://www.figma.com/api/mcp/asset/b927f68f-3854-4b5b-9135-3acba0fc4335" alt="" width="326" height="326" />
-              <img class="calendar-item__face" src="https://www.figma.com/api/mcp/asset/91226529-d407-46ed-8d3f-0fc22d739783" alt="" width="219" height="227" />
+          <li class="calendar-item" aria-label="February 1, Snow Moon">
+            <div class="calendar-item__moon calendar-item__moon--snow">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-02" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-02" startOffset="50%" text-anchor="middle">FEB 1ST — SNOW MOON</textPath>
+                </text>
+              </svg>
             </div>
-            <p class="calendar-item__caption">MAR 3RD — WORM MOON</p>
+          </li>
+          <li class="calendar-item" aria-label="March 3, Worm Moon">
+            <div class="calendar-item__moon calendar-item__moon--worm">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-03" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-03" startOffset="50%" text-anchor="middle">MAR 3RD — WORM MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="April 1, Pink Moon">
+            <div class="calendar-item__moon calendar-item__moon--pink">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-04" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-04" startOffset="50%" text-anchor="middle">APR 1ST — PINK MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="May 1, Flower Moon">
+            <div class="calendar-item__moon calendar-item__moon--flower">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-05" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-05" startOffset="50%" text-anchor="middle">MAY 1ST — FLOWER MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="May 31, Blue Moon">
+            <div class="calendar-item__moon calendar-item__moon--blue">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-06" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-06" startOffset="50%" text-anchor="middle">MAY 31ST — BLUE MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="June 30, Strawberry Moon">
+            <div class="calendar-item__moon calendar-item__moon--strawberry">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-07" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-07" startOffset="50%" text-anchor="middle">JUN 30TH — STRAWBERRY MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="July 29, Buck Moon">
+            <div class="calendar-item__moon calendar-item__moon--buck">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-08" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-08" startOffset="50%" text-anchor="middle">JUL 29TH — BUCK MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="August 28, Sturgeon Moon">
+            <div class="calendar-item__moon calendar-item__moon--sturgeon">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-09" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-09" startOffset="50%" text-anchor="middle">AUG 28TH — STURGEON MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="October 26, Hunter's Moon">
+            <div class="calendar-item__moon calendar-item__moon--hunter">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-10" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-10" startOffset="50%" text-anchor="middle">OCT 26TH — HUNTER'S MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="November 24, Beaver Moon">
+            <div class="calendar-item__moon calendar-item__moon--beaver">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-11" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-11" startOffset="50%" text-anchor="middle">NOV 24TH — BEAVER'S MOON</textPath>
+                </text>
+              </svg>
+            </div>
+          </li>
+          <li class="calendar-item" aria-label="December 26, Cold Moon">
+            <div class="calendar-item__moon calendar-item__moon--cold">
+              <div class="calendar-item__disc">
+                <span class="calendar-item__crater calendar-item__crater--a" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--b" aria-hidden="true"></span>
+                <span class="calendar-item__crater calendar-item__crater--c" aria-hidden="true"></span>
+              </div>
+              <svg class="calendar-item__label-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path id="cal-moon-arc-12" fill="none" d="M 24 160 A 136 136 0 0 1 296 160" />
+                </defs>
+                <text class="calendar-item__label-text">
+                  <textPath href="#cal-moon-arc-12" startOffset="50%" text-anchor="middle">DEC 26TH — COLD MOON</textPath>
+                </text>
+              </svg>
+            </div>
           </li>
         </ul>
-        <p class="wireframe-note">Wireframe: additional months follow the same pattern in the Figma file.</p>
       </section>
 
       <!-- Phases of the Moon — Figma: 2023:26 (wireframe excerpt) -->
@@ -135,7 +358,9 @@
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
-            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+            </svg>
           </a>
         </header>
         <h2 class="screen-subtitle">Phases of the Moon</h2>
@@ -163,7 +388,9 @@
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
-            <img src="https://www.figma.com/api/mcp/asset/cfd3017d-51f7-4f40-bbe6-813b71e088ef" alt="" width="69" height="12" />
+            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+            </svg>
           </a>
         </header>
         <h2 class="screen-subtitle screen-subtitle--on-bg">New Moon Reflection</h2>
@@ -178,8 +405,8 @@
           <p class="card__label card__label--left">Type Here:</p>
           <div class="journal-field" role="textbox" aria-multiline="true" contenteditable="true"></div>
           <div class="journal-actions">
-            <button type="button" class="link-action">Save Reflection</button>
-            <button type="button" class="link-action">Share Reflection</button>
+            <button type="button" class="btn-pill link-action">Save Reflection</button>
+            <button type="button" class="btn-pill link-action">Share Reflection</button>
           </div>
         </div>
         <a class="btn-pill btn-pill--footer" href="#/past">My Past Reflections</a>
@@ -190,7 +417,9 @@
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
-            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+            </svg>
           </a>
         </header>
         <h2 class="screen-subtitle screen-subtitle--on-bg">My Past Reflections</h2>
@@ -219,7 +448,9 @@
         <header class="screen-header">
           <h1 class="brand-title">LUNASCOPE</h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
-            <img src="https://www.figma.com/api/mcp/asset/d303830c-72f8-4173-80d0-2848f5815fe3" alt="" width="69" height="12" />
+            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
+            </svg>
           </a>
         </header>
         <h2 class="screen-subtitle screen-subtitle--on-bg">Reflection Void…</h2>

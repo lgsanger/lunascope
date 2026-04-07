@@ -21,6 +21,8 @@
   --shadow-btn: 0 4px 4px rgba(0, 0, 0, 0.25);
   --border-thick: 3px solid var(--color-border);
   --app-max-width: 393px;
+  /* Home moon + all moon illustrations (Today, calendar, phases) */
+  --moon-spin-duration: 48s;
   /* Home: gap under title + between nav pills (same value) */
   --space-home-rhythm: 39px;
   /* Home moon — surface + craters (no outer ring; sits on page background) */
@@ -120,15 +122,21 @@ body {
   padding-right: 1.25rem;
 }
 
-.today-header {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 0;
+.screen--today .screen-header {
+  gap: 1.35rem;
 }
 
 .screen--scroll {
   padding: 1.5rem 1.25rem 2rem;
+}
+
+/* Full Moon Calendar — same title ↔ back spacing as Today’s Moon Phase */
+.screen--calendar.screen--scroll {
+  padding-top: 2rem;
+}
+
+.screen--calendar .screen-header {
+  gap: 1.35rem;
 }
 
 /* Brand */
@@ -167,7 +175,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: home-moon-rotate 48s linear infinite;
+  animation: home-moon-rotate var(--moon-spin-duration) linear infinite;
 }
 
 @keyframes home-moon-rotate {
@@ -178,6 +186,13 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .home-moon__spin {
+    animation-duration: 0.001ms;
+    animation-iteration-count: 1;
+  }
+
+  .today-moon__image,
+  .calendar-item__disc,
+  .phase-block__moon {
     animation-duration: 0.001ms;
     animation-iteration-count: 1;
   }
@@ -248,53 +263,30 @@ body {
   margin-top: var(--space-home-rhythm);
 }
 
-/* Buttons */
+/* Buttons — lavender fill, ink outline, Times caps + tracking (same as home nav) */
 
 .btn-pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 67px;
-  padding: 0.5rem 1rem;
-  background: var(--color-ink);
-  border: var(--border-thick);
-  border-radius: var(--radius-pill);
-  box-shadow: var(--shadow-btn);
-  color: var(--color-muted);
-  font-family: var(--font-body), Georgia, serif;
-  font-size: 30px;
-  line-height: 1.2;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.btn-pill:focus-visible {
-  outline: 2px solid var(--color-ink);
-  outline-offset: 3px;
-}
-
-/* Home nav: outline pills; same serif + tracking as DATE AND TIME card label */
-.home-nav .btn-pill {
   position: relative;
   overflow: visible;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  min-height: 67px;
+  padding: 0.85rem 1.25rem 0.95rem 1.35rem;
   font-family: "Times New Roman", Times, serif;
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
   font-weight: 400;
   letter-spacing: 0.42em;
   text-transform: uppercase;
   line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
   background-color: var(--color-bg);
   color: var(--color-ink);
-  border-width: 2px;
-  border-style: solid;
-  border-color: var(--color-ink);
+  border: 2px solid var(--color-ink);
   border-radius: 9999px;
-  padding: 0.85rem 1.25rem 0.95rem 1.35rem;
   box-shadow: 0 2px 8px rgba(71, 33, 100, 0.1);
   transition:
     background-color 0.2s ease,
@@ -302,14 +294,24 @@ body {
     box-shadow 0.2s ease;
 }
 
-.home-nav .btn-pill:hover {
-  /* Opaque lavender tint (stars stay hidden vs translucent rgba) */
+button.btn-pill {
+  font-family: "Times New Roman", Times, serif;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.btn-pill:hover {
   background-color: #d4c4e8;
   box-shadow: 0 4px 12px rgba(71, 33, 100, 0.16);
 }
 
-.home-nav .btn-pill:active {
+.btn-pill:active {
   transform: scale(0.98);
+}
+
+.btn-pill:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
 }
 
 .btn-pill--footer {
@@ -317,24 +319,6 @@ body {
   max-width: 270px;
   margin-left: auto;
   margin-right: auto;
-}
-
-/* Reflection screen: keep filled pill */
-.btn-pill.btn-pill--footer {
-  background: var(--color-ink);
-  border-color: var(--color-border);
-  border-radius: var(--radius-pill);
-  color: var(--color-muted);
-  box-shadow: var(--shadow-btn);
-}
-
-.btn-pill.btn-pill--footer:hover {
-  background: var(--color-ink);
-  filter: brightness(1.05);
-}
-
-.btn-pill.btn-pill--footer:active {
-  transform: none;
 }
 
 /* Inner screen header */
@@ -347,46 +331,44 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Back control — same chrome as text pills (icon-only) */
 .btn-back {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 159px;
-  height: 83px;
-  background: var(--color-ink);
-  border: var(--border-thick);
-  border-radius: var(--radius-back);
-  box-shadow: var(--shadow-btn);
-  text-decoration: none;
-}
-
-.btn-back img {
-  display: block;
-  transform: rotate(180deg);
-}
-
-.btn-back.btn-back--today {
   width: auto;
-  min-width: 3.25rem;
-  height: 2.75rem;
-  padding: 0 1.1rem;
-  border-radius: 14px;
-  background: var(--color-bg);
+  min-width: 3.5rem;
+  min-height: 2.85rem;
+  padding: 0.65rem 1.35rem;
+  background-color: var(--color-bg);
   border: 2px solid var(--color-ink);
+  border-radius: 9999px;
   color: var(--color-ink);
-  box-shadow: none;
+  box-shadow: 0 2px 8px rgba(71, 33, 100, 0.1);
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.btn-back.btn-back--today .btn-back__icon {
-  display: block;
+.btn-back:hover {
+  background-color: #d4c4e8;
+  box-shadow: 0 4px 12px rgba(71, 33, 100, 0.16);
 }
 
-.btn-back.btn-back--today:hover {
-  filter: brightness(0.97);
-}
-
-.btn-back.btn-back--today:active {
+.btn-back:active {
   transform: scale(0.98);
+}
+
+.btn-back:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+.btn-back__icon {
+  display: block;
+  flex-shrink: 0;
 }
 
 .screen-subtitle {
@@ -439,6 +421,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: home-moon-rotate var(--moon-spin-duration) linear infinite;
 }
 
 .today-moon__canvas {
@@ -645,23 +628,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.35rem;
-}
-
-.link-action {
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: inherit;
-  font-size: 25px;
-  color: var(--color-muted);
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-.link-action:focus-visible {
-  outline: 2px solid var(--color-muted);
-  outline-offset: 2px;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 270px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Reflection lists */
@@ -694,7 +665,78 @@ body {
   color: var(--color-muted);
 }
 
-/* Calendar wireframe */
+/* Full Moon Calendar — same Times + tracking as home nav & Today DATE AND TIME */
+.screen--calendar .screen-subtitle {
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+.screen--calendar .screen-hint {
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.72rem, 2.35vw, 0.82rem);
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  line-height: 1.45;
+  color: var(--color-ink);
+}
+
+/* Full Moon Calendar — notify disclosure (stacked pills, same treatment as home) */
+.calendar-notify {
+  width: 100%;
+  max-width: min(300px, 92vw);
+  margin: 0.75rem auto 1.5rem;
+}
+
+.calendar-notify__toggle {
+  position: relative;
+  width: 100%;
+  padding: 0.85rem 2.65rem 0.85rem 1rem;
+  letter-spacing: 0.35em;
+}
+
+.calendar-notify__toggle-text {
+  display: block;
+}
+
+.calendar-notify__chevron {
+  position: absolute;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-ink);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.calendar-notify--open .calendar-notify__chevron {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.calendar-notify__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.62rem;
+  margin-top: 0.62rem;
+}
+
+.calendar-notify__panel[hidden] {
+  display: none;
+}
+
+.calendar-notify__option {
+  text-transform: none;
+  letter-spacing: 0.14em;
+  min-height: 3.25rem;
+  padding: 0.75rem 1rem;
+  font-size: clamp(0.72rem, 2.35vw, 0.86rem);
+}
+
+/* Full Moon Calendar — same footprint + arc label as Today’s moon stage */
 
 .calendar-list {
   list-style: none;
@@ -702,7 +744,8 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  align-items: center;
+  gap: 2.25rem;
 }
 
 .calendar-item {
@@ -713,39 +756,140 @@ body {
 
 .calendar-item__moon {
   position: relative;
-  width: 326px;
-  height: 326px;
+  width: min(292px, 84vw);
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-ink);
+  border: 2px solid var(--color-border);
+  box-shadow: 0 6px 20px rgba(71, 33, 100, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.calendar-item__orbit {
+.calendar-item__disc {
+  position: relative;
+  width: 70%;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--moon-surface, #b5a7c4);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset -2px 2px 6px rgba(0, 0, 0, 0.08);
+  animation: home-moon-rotate var(--moon-spin-duration) linear infinite;
+}
+
+.calendar-item:nth-child(even) .calendar-item__disc {
+  animation-direction: reverse;
+}
+
+.calendar-item__crater {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--moon-crater, #9487a2);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12);
+}
+
+.calendar-item__crater--a {
+  width: 24%;
+  height: 24%;
+  top: 14%;
+  right: 16%;
+}
+
+.calendar-item__crater--b {
+  width: 13%;
+  height: 13%;
+  top: 40%;
+  left: 20%;
+}
+
+.calendar-item__crater--c {
+  width: 11%;
+  height: 11%;
+  bottom: 20%;
+  left: 18%;
+}
+
+.calendar-item__label-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  pointer-events: none;
 }
 
-.calendar-item__face {
-  position: relative;
-  z-index: 1;
-  width: 219px;
-  height: auto;
+/* Match Today’s curved phase label scale (~1/15–1/18 cap height vs ring in the 320 viewBox) */
+.calendar-item__label-text {
+  font-family: "Times New Roman", Times, serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  fill: rgba(255, 255, 255, 0.92);
 }
 
-.calendar-item__moon--simple {
-  background: var(--color-ink);
-  border-radius: 50%;
-  border: var(--border-thick);
+/* Named-moon surface + crater colors (flat fills) */
+.calendar-item__moon--wolf {
+  --moon-surface: #c4bcc8;
+  --moon-crater: #8a8290;
 }
 
-.calendar-item__caption {
-  margin: 0.75rem 0 0;
-  font-size: 22px;
-  color: var(--color-ink);
-  text-align: center;
-  letter-spacing: 0.04em;
+.calendar-item__moon--snow {
+  --moon-surface: #ffffff;
+  --moon-crater: #ddd8e4;
+}
+
+.calendar-item__moon--worm {
+  --moon-surface: #9d96a8;
+  --moon-crater: #5d5668;
+}
+
+.calendar-item__moon--pink {
+  --moon-surface: #f2c4d4;
+  --moon-crater: #c76b8a;
+}
+
+.calendar-item__moon--flower {
+  --moon-surface: #9d96a8;
+  --moon-crater: #5d5668;
+}
+
+.calendar-item__moon--blue {
+  --moon-surface: #b4c4ec;
+  --moon-crater: #6a7aa8;
+}
+
+.calendar-item__moon--strawberry {
+  --moon-surface: #e07a72;
+  --moon-crater: #9a3834;
+}
+
+.calendar-item__moon--buck {
+  --moon-surface: #9d96a8;
+  --moon-crater: #5d5668;
+}
+
+.calendar-item__moon--sturgeon {
+  --moon-surface: #9d96a8;
+  --moon-crater: #5d5668;
+}
+
+.calendar-item__moon--hunter {
+  --moon-surface: #f2e6c8;
+  --moon-crater: #b89260;
+}
+
+.calendar-item__moon--beaver {
+  --moon-surface: #9d96a8;
+  --moon-crater: #5d5668;
+}
+
+.calendar-item__moon--cold {
+  --moon-surface: #a8a2b2;
+  --moon-crater: #656078;
 }
 
 /* Phases wireframe */
@@ -768,6 +912,11 @@ body {
 .phase-block__moon {
   width: 326px;
   height: 326px;
+  animation: home-moon-rotate var(--moon-spin-duration) linear infinite;
+}
+
+.phase-block:nth-child(even) .phase-block__moon {
+  animation-direction: reverse;
 }
 
 .phase-block__moon img {

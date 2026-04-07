@@ -360,6 +360,18 @@
     return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
   }
 
+  function pushExcludeSelector(rects, starfield, selector, extraPad) {
+    extraPad = extraPad || 0;
+    var els = document.querySelectorAll(selector);
+    for (var k = 0; k < els.length; k++) {
+      var r = rectRelative(els[k], starfield);
+      if (r.right - r.left < 2 || r.bottom - r.top < 2) {
+        continue;
+      }
+      rects.push(expandRect(r, EXCLUDE_PAD + extraPad));
+    }
+  }
+
   function getExcludeRects(starfield) {
     var rects = [];
     var pills = document.querySelectorAll(".home-nav .btn-pill");
@@ -377,6 +389,24 @@
         continue;
       }
       rects.push(expandRect(tr, EXCLUDE_PAD + TITLE_EXTRA_PAD));
+    }
+    /* Keep sparkles out from behind typography and controls (all routes) */
+    var textUiSelectors = [
+      ".btn-back",
+      ".screen-subtitle",
+      ".screen-hint",
+      ".calendar-notify",
+      ".calendar-item__moon",
+      ".wireframe-note",
+      ".phase-block__name",
+      ".reflection-card",
+      ".void-card",
+      ".card",
+      ".today-moon__stage",
+      ".journal-field",
+    ];
+    for (var s = 0; s < textUiSelectors.length; s++) {
+      pushExcludeSelector(rects, starfield, textUiSelectors[s], 6);
     }
     return rects;
   }
@@ -472,6 +502,62 @@
       maybeUpdateTodayMoon();
     }, 120);
   });
+
+  function initCalendarNotify() {
+    var root = document.querySelector("[data-calendar-notify]");
+    if (!root) {
+      return;
+    }
+    var btn = root.querySelector(".calendar-notify__toggle");
+    var panel = root.querySelector(".calendar-notify__panel");
+    if (!btn || !panel) {
+      return;
+    }
+
+    function setOpen(open) {
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) {
+        panel.removeAttribute("hidden");
+      } else {
+        panel.setAttribute("hidden", "");
+      }
+      if (open) {
+        root.classList.add("calendar-notify--open");
+      } else {
+        root.classList.remove("calendar-notify--open");
+      }
+      scheduleStarfield();
+    }
+
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      setOpen(btn.getAttribute("aria-expanded") !== "true");
+    });
+
+    var opts = root.querySelectorAll(".calendar-notify__option");
+    for (var i = 0; i < opts.length; i++) {
+      opts[i].addEventListener("click", function () {
+        setOpen(false);
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      if (!root.contains(e.target)) {
+        setOpen(false);
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") {
+        return;
+      }
+      if (btn.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+      }
+    });
+  }
+
+  initCalendarNotify();
 
   onHashChange();
 })();
