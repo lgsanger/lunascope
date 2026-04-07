@@ -2,9 +2,6 @@
   var STAR_PATH =
     "M 12.000 1.000 L 14.687 9.313 L 20.200 12.000 L 14.687 14.687 L 12.000 23.000 L 9.313 14.687 L 3.800 12.000 L 9.313 9.313 Z";
 
-  var EXCLUDE_PAD = 10;
-  var TITLE_EXTRA_PAD = 8;
-  var MAX_TRIES = 220;
   var NS = "http://www.w3.org/2000/svg";
 
   var routes = {
@@ -1109,157 +1106,46 @@
 
   setInterval(updateRealTimeDisplays, 1000);
 
-  function rectRelative(el, container) {
-    var er = el.getBoundingClientRect();
-    var cr = container.getBoundingClientRect();
-    return {
-      left: er.left - cr.left,
-      top: er.top - cr.top,
-      right: er.right - cr.left,
-      bottom: er.bottom - cr.top,
-    };
-  }
-
-  function expandRect(r, pad) {
-    return {
-      left: r.left - pad,
-      top: r.top - pad,
-      right: r.right + pad,
-      bottom: r.bottom + pad,
-    };
-  }
-
-  function rectsOverlap(a, b) {
-    return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
-  }
-
-  function pushExcludeSelector(rects, starfield, selector, extraPad) {
-    extraPad = extraPad || 0;
-    var els = document.querySelectorAll(selector);
-    for (var k = 0; k < els.length; k++) {
-      var r = rectRelative(els[k], starfield);
-      if (r.right - r.left < 2 || r.bottom - r.top < 2) {
-        continue;
-      }
-      rects.push(expandRect(r, EXCLUDE_PAD + extraPad));
-    }
-  }
-
-  function getExcludeRects(starfield) {
-    var rects = [];
-    var pills = document.querySelectorAll(".home-nav .btn-pill");
-    for (var i = 0; i < pills.length; i++) {
-      var r = rectRelative(pills[i], starfield);
-      if (r.right - r.left < 2 || r.bottom - r.top < 2) {
-        continue;
-      }
-      rects.push(expandRect(r, EXCLUDE_PAD));
-    }
-    var titles = document.querySelectorAll(".brand-title");
-    for (var j = 0; j < titles.length; j++) {
-      var tr = rectRelative(titles[j], starfield);
-      if (tr.right - tr.left < 2 || tr.bottom - tr.top < 2) {
-        continue;
-      }
-      rects.push(expandRect(tr, EXCLUDE_PAD + TITLE_EXTRA_PAD));
-    }
-    /* Keep sparkles out from behind typography and controls (all routes) */
-    /* Exclude actual text/controls only — not list wrappers (those blocked gaps between cards) */
-    var textUiSelectors = [
-      ".btn-back",
-      ".screen-subtitle",
-      ".screen-hint",
-      ".calendar-notify",
-      ".calendar-notify__status",
-      ".calendar-item__moon",
-      ".wireframe-note",
-      ".phase-item",
-      ".phase-item__moon",
-      ".reflection-card",
-      ".void-card",
-      ".card",
-      ".today-moon__stage",
-      ".journal-field",
-      ".screen-header",
-      ".home-header",
-      ".home-nav",
-      ".btn-pill",
-      ".link-action",
-      ".reflection-past-link",
-      ".today-moon",
-      ".card--datetime-today",
-    ];
-    for (var s = 0; s < textUiSelectors.length; s++) {
-      pushExcludeSelector(rects, starfield, textUiSelectors[s], 6);
-    }
-    /* Long copy blocks + status lines — extra breathing room for legibility */
-    var textBlockSelectors = [
-      ".past-reflection-empty",
-      ".void-reflection-empty",
-      ".reflection-save-status",
-      ".reflection-void-status",
-    ];
-    for (var t = 0; t < textBlockSelectors.length; t++) {
-      pushExcludeSelector(rects, starfield, textBlockSelectors[t], 16);
-    }
-    return rects;
-  }
-
-  function starHitsExclude(cx, cy, half, excludeRects) {
-    var star = {
-      left: cx - half,
-      top: cy - half,
-      right: cx + half,
-      bottom: cy + half,
-    };
-    for (var i = 0; i < excludeRects.length; i++) {
-      if (rectsOverlap(star, excludeRects[i])) {
-        return true;
-      }
-    }
-    return false;
+  function syncStarfieldMinHeight(starfield) {
+    var docEl = document.documentElement;
+    var body = document.body;
+    var scrollH = Math.max(
+      docEl.scrollHeight,
+      body ? body.scrollHeight : 0,
+      docEl.clientHeight,
+      window.innerHeight || 0
+    );
+    starfield.style.minHeight = scrollH + "px";
   }
 
   function placeStars(starfield) {
+    syncStarfieldMinHeight(starfield);
     var w = starfield.clientWidth;
     var h = starfield.clientHeight;
-    if (w < 1 || h < 1) {
-      return;
+    if (w < 2) {
+      w = window.innerWidth || document.documentElement.clientWidth || 320;
+    }
+    if (h < 2) {
+      h = window.innerHeight || document.documentElement.clientHeight || 568;
     }
 
     var reduce =
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    /* Scale count with viewport area so wide/tall screens stay filled */
-    var referenceArea = 280000;
-    var baseStars = reduce ? 32 : 88;
+    /* Scale count with viewport area — dense fill (no exclusion zones) */
+    var referenceArea = 220000;
+    var baseStars = reduce ? 40 : 115;
     var targetCount = Math.round((baseStars * (w * h)) / referenceArea);
-    if (targetCount < (reduce ? 22 : 56)) {
-      targetCount = reduce ? 22 : 56;
+    if (targetCount < (reduce ? 28 : 72)) {
+      targetCount = reduce ? 28 : 72;
     }
-    if (targetCount > (reduce ? 44 : 300)) {
-      targetCount = reduce ? 44 : 300;
+    if (targetCount > (reduce ? 52 : 380)) {
+      targetCount = reduce ? 52 : 380;
     }
 
     starfield.textContent = "";
 
-    var excludeRects = getExcludeRects(starfield);
-    var placed = 0;
-    var tries = 0;
-
-    while (placed < targetCount && tries < MAX_TRIES * targetCount) {
-      tries += 1;
-      var cx = Math.random() * w;
-      var cy = Math.random() * h;
-      var size = 8 + Math.random() * 18;
-      var half = size * 0.6;
-      if (starHitsExclude(cx, cy, half, excludeRects)) {
-        continue;
-      }
-
-      var rotation = Math.random() * 360;
-      var opacity = 0.18 + Math.random() * 0.35;
-
+    function appendStarSvg(cx, cy, size, opacity, rotation) {
       var svg = document.createElementNS(NS, "svg");
       svg.setAttribute("class", "starfield__star");
       svg.setAttribute("viewBox", "0 0 24 24");
@@ -1279,7 +1165,16 @@
       svg.appendChild(path);
 
       starfield.appendChild(svg);
-      placed += 1;
+    }
+
+    var pi;
+    for (pi = 0; pi < targetCount; pi++) {
+      var cx = Math.random() * w;
+      var cy = Math.random() * h;
+      var size = 6 + Math.random() * 20;
+      var rotation = Math.random() * 360;
+      var opacity = 0.52 + Math.random() * 0.42;
+      appendStarSvg(cx, cy, size, opacity, rotation);
     }
   }
 
@@ -1305,6 +1200,16 @@
       maybeUpdateTodayMoon();
       initPhaseIllustrations();
     }, 120);
+  });
+
+  window.addEventListener("orientationchange", function () {
+    setTimeout(function () {
+      scheduleStarfield();
+    }, 250);
+  });
+
+  window.addEventListener("pageshow", function () {
+    scheduleStarfield();
   });
 
   /* Full moon reminders — Notification API + localStorage (SunCalc-style illumination peak) */

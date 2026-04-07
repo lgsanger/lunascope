@@ -13,6 +13,8 @@
   --color-ink: #472164;
   --color-border: #8159a0;
   --color-muted: #b1a1be;
+  /* Background sparkles — medium lavender, a step darker than page bg */
+  --color-starfield: #9f82c4;
   --font-display: "Rosalie", serif;
   --font-body: "Bhavuka", serif;
   --radius-pill: 20px;
@@ -58,27 +60,31 @@ body {
   min-height: 100dvh;
 }
 
+/* Transparent so the starfield layer (sibling, z-index 0) stays visible behind content */
 .app-root {
   width: 100%;
   max-width: var(--app-max-width);
   min-height: 100dvh;
-  background: var(--color-bg);
+  background: transparent;
   position: relative;
   z-index: 1;
 }
 
-/* Full-bleed background stars: document height (scrolls with page) × full browser width */
+/* Full-bleed background stars: document height (scrolls with page) × full width */
+/* Avoid transform on the layer — it can break height on iOS Safari; JS also sets min-height */
 .starfield {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
+  left: 0;
+  right: 0;
   top: 0;
-  bottom: 0;
+  width: 100%;
+  min-width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
-  color: var(--color-ink);
+  color: var(--color-starfield);
 }
 
 .starfield__star {
