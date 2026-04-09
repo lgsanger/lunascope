@@ -651,6 +651,98 @@ button.btn-pill {
   gap: 0.75rem;
 }
 
+.screen--reflection .card--meditation.card--reflection-light {
+  margin-bottom: 1rem;
+}
+
+.screen--reflection .card--meditation .card__label--reflection {
+  align-self: stretch;
+  text-align: center;
+}
+
+.reflection-meditation__hint {
+  margin: 0;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.82rem, 2.6vw, 0.95rem);
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-ink);
+  text-align: center;
+  opacity: 0.88;
+}
+
+.reflection-meditation-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0.85rem;
+  width: 100%;
+  max-width: min(300px, 92vw);
+  margin: 0.35rem auto 0;
+}
+
+.screen--reflection .reflection-meditation-btn {
+  flex: 1;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.85rem;
+  padding: 0.55rem 1rem;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.72rem, 2.4vw, 0.82rem);
+  font-weight: 400;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  background: var(--color-bg);
+  border: 2px solid var(--color-ink);
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(71, 33, 100, 0.1);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease,
+    opacity 0.2s ease;
+}
+
+.screen--reflection .reflection-meditation-btn:hover:not(:disabled) {
+  background-color: #d4c4e8;
+  box-shadow: 0 4px 12px rgba(71, 33, 100, 0.14);
+}
+
+.screen--reflection .reflection-meditation-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.screen--reflection .reflection-meditation-btn:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
+}
+
+.screen--reflection .reflection-meditation-btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.screen--reflection .reflection-meditation-btn__icon {
+  flex-shrink: 0;
+  display: block;
+}
+
+.screen--reflection .reflection-meditation-btn__label {
+  position: relative;
+  top: 0.06em;
+}
+
+.screen--reflection .card--meditation.reflection-meditation--playing {
+  box-shadow:
+    0 6px 18px rgba(71, 33, 100, 0.12),
+    0 0 0 1px rgba(71, 33, 100, 0.08);
+}
+
 .screen--reflection .card--prompt.card--reflection-light {
   margin-bottom: 1rem;
 }

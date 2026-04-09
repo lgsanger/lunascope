@@ -572,6 +572,46 @@
           </a>
         </header>
         <h2 class="screen-subtitle">New Moon Reflection</h2>
+        <audio
+          id="reflection-meditation-audio"
+          preload="none"
+          src="assets/your%20nervous%20system%20needs%20this.%20%5BJYdfoZReAW8%5D.mp3"
+        ></audio>
+        <div class="card card--meditation card--reflection-light" id="reflection-meditation-card">
+          <p class="card__label card__label--reflection">Reset Your Nervous System</p>
+          <p class="reflection-meditation__hint" id="reflection-meditation-hint">
+            Ambient Meditation Music
+          </p>
+          <div
+            class="reflection-meditation-controls"
+            role="group"
+            aria-label="Meditation sound playback"
+          >
+            <button
+              type="button"
+              class="reflection-meditation-btn"
+              id="reflection-meditation-play"
+              aria-label="Play meditation sound"
+            >
+              <svg class="reflection-meditation-btn__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M8 5v14l11-7L8 5z" />
+              </svg>
+              <span class="reflection-meditation-btn__label">Play</span>
+            </button>
+            <button
+              type="button"
+              class="reflection-meditation-btn"
+              id="reflection-meditation-pause"
+              aria-label="Pause meditation sound"
+              disabled
+            >
+              <svg class="reflection-meditation-btn__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+              <span class="reflection-meditation-btn__label">Pause</span>
+            </button>
+          </div>
+        </div>
         <div class="card card--prompt card--reflection-light" id="reflection-prompt-card" aria-live="polite">
           <p class="card__tag card__tag--reflection" id="reflection-prompt-tag">RELEASE</p>
           <div class="card__rule card__rule--reflection" role="presentation"></div>

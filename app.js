@@ -3,6 +3,7 @@
     "M 12.000 1.000 L 14.687 9.313 L 20.200 12.000 L 14.687 14.687 L 12.000 23.000 L 9.313 14.687 L 3.800 12.000 L 9.313 9.313 Z";
 
   var NS = "http://www.w3.org/2000/svg";
+  var reflectionMeditationAudioEl = null;
 
   var routes = {
     "": "home",
@@ -1023,6 +1024,67 @@
     }
   }
 
+  function initReflectionMeditation() {
+    var audio = document.getElementById("reflection-meditation-audio");
+    var playBtn = document.getElementById("reflection-meditation-play");
+    var pauseBtn = document.getElementById("reflection-meditation-pause");
+    var card = document.getElementById("reflection-meditation-card");
+    if (!audio || !playBtn || !pauseBtn || !card) {
+      return;
+    }
+    reflectionMeditationAudioEl = audio;
+
+    function meditationHasSrc() {
+      var attr = audio.getAttribute("src");
+      return !!(attr && attr.trim()) || !!(audio.currentSrc && audio.currentSrc.length > 0);
+    }
+
+    function updateMeditationControls() {
+      var hasSrc = meditationHasSrc();
+      if (!hasSrc) {
+        playBtn.disabled = false;
+        pauseBtn.disabled = true;
+        card.classList.remove("reflection-meditation--playing");
+        return;
+      }
+      var playing = !audio.paused && !audio.ended;
+      playBtn.disabled = playing;
+      pauseBtn.disabled = !playing;
+      card.classList.toggle("reflection-meditation--playing", playing);
+    }
+
+    playBtn.addEventListener("click", function () {
+      if (!meditationHasSrc()) {
+        return;
+      }
+      var p = audio.play();
+      if (p && typeof p.then === "function") {
+        p.then(updateMeditationControls).catch(function () {
+          updateMeditationControls();
+        });
+      } else {
+        updateMeditationControls();
+      }
+    });
+
+    pauseBtn.addEventListener("click", function () {
+      audio.pause();
+      updateMeditationControls();
+    });
+
+    audio.addEventListener("play", updateMeditationControls);
+    audio.addEventListener("pause", updateMeditationControls);
+    audio.addEventListener("ended", updateMeditationControls);
+
+    updateMeditationControls();
+  }
+
+  function pauseReflectionMeditationIfNeeded() {
+    if (reflectionMeditationAudioEl && !reflectionMeditationAudioEl.paused) {
+      reflectionMeditationAudioEl.pause();
+    }
+  }
+
   function updateRealTimeDisplays() {
     var now = new Date();
     var line1 = document.getElementById("today-date-line1");
@@ -1088,6 +1150,9 @@
 
   function onHashChange() {
     var route = getRouteId();
+    if (route !== "reflection") {
+      pauseReflectionMeditationIfNeeded();
+    }
     showScreen(route);
     scheduleStarfield();
     moonDrawState.key = null;
@@ -1570,6 +1635,7 @@
 
   initCalendarNotify();
   initReflectionArchive();
+  initReflectionMeditation();
 
   onHashChange();
 })();
