@@ -106,6 +106,31 @@ body {
   overflow: visible;
   transform: translate(-50%, -50%);
   transform-origin: center;
+  color: var(--color-starfield);
+  opacity: var(--star-op, 0.85);
+  animation: starfield-twinkle var(--twinkle-dur, 4s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starfield__star {
+    animation: none;
+    color: var(--color-starfield);
+  }
+}
+
+/* Lavender → soft white flash (currentColor on path); no calc() in keyframes for broad support */
+@keyframes starfield-twinkle {
+  0%,
+  22%,
+  78%,
+  100% {
+    color: var(--color-starfield);
+  }
+
+  50% {
+    color: rgba(255, 255, 255, 0.92);
+  }
 }
 
 .app-root > .screen {

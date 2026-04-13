@@ -1220,7 +1220,12 @@
       svg.setAttribute("focusable", "false");
       svg.style.left = cx + "px";
       svg.style.top = cy + "px";
-      svg.style.opacity = String(opacity);
+      svg.style.setProperty("--star-op", String(opacity));
+      if (!reduce) {
+        var twDur = 1.8 + Math.random() * 7.2;
+        svg.style.setProperty("--twinkle-dur", twDur + "s");
+        svg.style.setProperty("--twinkle-delay", -Math.random() * twDur + "s");
+      }
       svg.style.transform =
         "translate(-50%, -50%) rotate(" + rotation + "deg)";
 
