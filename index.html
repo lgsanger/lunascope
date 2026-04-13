@@ -32,19 +32,124 @@
           <h1 class="brand-title">LUNASCOPE</h1>
         </header>
         <nav class="home-nav" aria-label="Main">
-          <a class="btn-pill" href="#/today">Today’s Moon Phase</a>
-          <a class="btn-pill" href="#/calendar">Full Moon Calendar</a>
-          <a class="btn-pill" href="#/phases">Phases of the Moon</a>
-          <a class="btn-pill" href="#/reflection">Reflection Prompt</a>
-          <a class="btn-pill" href="#/past">My Past Reflections</a>
-          <a class="btn-pill" href="#/void">Reflection Void</a>
+          <a class="btn-pill" href="#/today">
+            <span class="home-nav__icon" aria-hidden="true">
+              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="6.75" fill="none" stroke="currentColor" stroke-width="1.35" />
+                <circle cx="12" cy="12" r="2" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="home-nav__label">Today’s Moon Phase</span>
+          </a>
+          <a class="btn-pill" href="#/calendar">
+            <span class="home-nav__icon" aria-hidden="true">
+              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                />
+                <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+              </svg>
+            </span>
+            <span class="home-nav__label">Full Moon Calendar</span>
+          </a>
+          <a class="btn-pill" href="#/phases">
+            <span class="home-nav__icon" aria-hidden="true">
+              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                />
+                <!-- Centers on the arc: left t≈0.2, peak, right t≈0.75 (cubic sample) -->
+                <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+              </svg>
+            </span>
+            <span class="home-nav__label">Phases of the Moon</span>
+          </a>
+          <a class="btn-pill" href="#/reflection">
+            <span class="home-nav__icon" aria-hidden="true">
+              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <!-- Sparkles behind brain (filled diamonds — same purple via currentColor) -->
+                <g fill="currentColor" stroke="none">
+                  <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                </g>
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <!-- Top-down brain: bilobed silhouette (wider mid, slight top groove, tapers toward base) -->
+                  <path
+                    d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                  />
+                  <!-- Longitudinal fissure -->
+                  <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                  <!-- Lobe-like squiggles (open toward midline) -->
+                  <path
+                    d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                  />
+                  <path
+                    d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                  />
+                </g>
+              </svg>
+            </span>
+            <span class="home-nav__label">Reflection Prompt</span>
+          </a>
+          <a class="btn-pill" href="#/past">
+            <span class="home-nav__icon" aria-hidden="true">
+              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                />
+              </svg>
+            </span>
+            <span class="home-nav__label">My Past Reflections</span>
+          </a>
+          <a class="btn-pill" href="#/void">
+            <span class="home-nav__icon" aria-hidden="true">
+              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+              </svg>
+            </span>
+            <span class="home-nav__label">Reflection Void</span>
+          </a>
         </nav>
       </section>
 
       <!-- Today’s Moon Phase — Figma: 1:3 (centered back → moon disc → date card) -->
       <section id="screen-today" class="screen screen--stack screen--today is-hidden" data-node-id="1:3" aria-label="Today’s Moon Phase">
         <header class="screen-header">
-          <h1 class="brand-title">LUNASCOPE</h1>
+          <h1 class="screen-header__title">
+            <span class="screen-header__icon-shadow" aria-hidden="true">
+              <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="6.75" fill="none" stroke="currentColor" stroke-width="1.35" />
+                <circle cx="12" cy="12" r="2" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="u-visually-hidden">Today’s Moon Phase</span>
+          </h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
             <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path
@@ -103,7 +208,23 @@
       <!-- Full Moon Calendar — Figma: 2023:12 (wireframe excerpt) -->
       <section id="screen-calendar" class="screen screen--scroll screen--calendar is-hidden" data-node-id="2023:12" aria-label="Full Moon Calendar">
         <header class="screen-header">
-          <h1 class="brand-title">LUNASCOPE</h1>
+          <h1 class="screen-header__title">
+            <span class="screen-header__icon-shadow" aria-hidden="true">
+              <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                />
+                <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+              </svg>
+            </span>
+            <span class="u-visually-hidden">Full Moon Calendar</span>
+          </h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
             <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
@@ -120,20 +241,22 @@
             aria-expanded="false"
             aria-controls="calendar-notify-panel"
           >
-            <span class="calendar-notify__toggle-text">NOTIFY ME</span>
-            <svg
-              class="calendar-notify__chevron"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-              focusable="false"
-            >
-              <path
-                fill="currentColor"
-                d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
-              />
-            </svg>
+            <span class="calendar-notify__toggle-inner">
+              <span class="calendar-notify__toggle-text">NOTIFY ME</span>
+              <svg
+                class="calendar-notify__chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </span>
           </button>
           <div
             class="calendar-notify__panel"
@@ -365,7 +488,26 @@
       <!-- Phases of the Moon — same moon stage + arc type as Full Moon Calendar; canvas uses live phase geometry -->
       <section id="screen-phases" class="screen screen--scroll screen--phases is-hidden" data-node-id="2023:26" aria-label="Phases of the Moon">
         <header class="screen-header">
-          <h1 class="brand-title">LUNASCOPE</h1>
+          <h1 class="screen-header__title">
+            <span class="screen-header__icon-shadow" aria-hidden="true">
+              <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <!-- Shift arc + moons left so peak moon (was x≈13.5) sits on 24×24 center (12) -->
+                <g transform="translate(-1.5 0)">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                  />
+                  <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                  <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                  <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+                </g>
+              </svg>
+            </span>
+            <span class="u-visually-hidden">Phases of the Moon</span>
+          </h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
             <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
@@ -564,7 +706,37 @@
       <!-- Reflection Prompt — light outlined cards + Times caps (same system as calendar / Today card) -->
       <section id="screen-reflection" class="screen screen--stack screen--reflection is-hidden" data-node-id="1:5" aria-label="Reflection Prompt">
         <header class="screen-header">
-          <h1 class="brand-title">LUNASCOPE</h1>
+          <h1 class="screen-header__title">
+            <span class="screen-header__icon-shadow" aria-hidden="true">
+              <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <g fill="currentColor" stroke="none">
+                  <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                </g>
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                  />
+                  <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                  <path
+                    d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                  />
+                  <path
+                    d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                  />
+                </g>
+              </svg>
+            </span>
+            <span class="u-visually-hidden">Reflection Prompt</span>
+          </h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
             <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
@@ -650,7 +822,20 @@
         aria-label="My Past Reflections"
       >
         <header class="screen-header">
-          <h1 class="brand-title">LUNASCOPE</h1>
+          <h1 class="screen-header__title">
+            <span class="screen-header__icon-shadow" aria-hidden="true">
+              <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.35"
+                  stroke-linecap="round"
+                  d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                />
+              </svg>
+            </span>
+            <span class="u-visually-hidden">My Past Reflections</span>
+          </h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
             <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
@@ -672,7 +857,16 @@
         aria-label="Reflection Void"
       >
         <header class="screen-header">
-          <h1 class="brand-title">LUNASCOPE</h1>
+          <h1 class="screen-header__title">
+            <span class="screen-header__icon-shadow" aria-hidden="true">
+              <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+              </svg>
+            </span>
+            <span class="u-visually-hidden">Reflection Void</span>
+          </h1>
           <a class="btn-back" href="#/" aria-label="Back to home">
             <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
