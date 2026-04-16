@@ -28,7 +28,7 @@
   /* Inner screen: icon ↔ back (tight); back → first line matches phases moon stack */
   --screen-after-header: 1.25rem;
   --screen-back-to-body: 2.25rem;
-  /* Home moon + all moon illustrations (Today, calendar, phases) */
+  /* Live moon on home + moon illustrations (calendar, phases) */
   --moon-spin-duration: 48s;
   /* Home: gap under title + between nav pills (same value) */
   --space-home-rhythm: 39px;
@@ -160,19 +160,11 @@ body {
   padding: 2rem 1.25rem 2rem;
 }
 
-/* Today’s Moon Phase — Figma 1:3: back → dark moon disc → date card */
-.screen--today {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--screen-back-to-body);
-}
-
 .screen--scroll {
   padding: 2rem 1.25rem 2rem;
 }
 
-/* Brand — home only (inner screens use .screen-header__title + icon) */
+/* Brand — home title + subpage wordmarks (same Rosalie + shadow, subpages smaller) */
 
 .home-header .brand-title {
   margin: 0;
@@ -181,6 +173,22 @@ body {
   font-size: 48px;
   line-height: 1;
   text-align: center;
+  color: var(--color-ink);
+  text-shadow: var(--shadow-brand);
+}
+
+.screen-header__wordmark {
+  display: block;
+  margin: 0;
+  padding: 0 0.35rem;
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(26px, 7.2vw, 34px);
+  line-height: 1.08;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-wrap: balance;
   color: var(--color-ink);
   text-shadow: var(--shadow-brand);
 }
@@ -194,13 +202,13 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0;
+  gap: 0.5rem;
   line-height: 1;
   text-align: center;
   font-weight: inherit;
 }
 
-/* Same footprint as .home-moon (200×200) */
+/* Same footprint as home live moon stage (200×200 icon area) */
 .screen-header__icon-shadow {
   display: flex;
   align-items: center;
@@ -241,25 +249,6 @@ body {
   width: 100%;
 }
 
-.home-moon {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 0.75rem;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.home-moon__spin {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: home-moon-rotate var(--moon-spin-duration) linear infinite;
-}
-
 @keyframes home-moon-rotate {
   to {
     transform: rotate(360deg);
@@ -267,11 +256,6 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-moon__spin {
-    animation-duration: 0.001ms;
-    animation-iteration-count: 1;
-  }
-
   .today-moon__spin,
   .calendar-item__disc,
   .phase-item__spin {
@@ -280,80 +264,105 @@ body {
   }
 }
 
-.home-moon__disc {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: var(--moon-surface);
-  position: relative;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    inset -3px 2px 8px rgba(0, 0, 0, 0.1),
-    var(--shadow-moon);
-}
-
-/* Crater dots — sizes/positions evoke the reference sketch */
-.home-moon__crater {
-  position: absolute;
-  border-radius: 50%;
-  background: var(--moon-crater);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
-}
-
-.home-moon__crater--a {
-  width: 28%;
-  height: 28%;
-  top: 12%;
-  right: 14%;
-}
-
-.home-moon__crater--b {
-  width: 16%;
-  height: 16%;
-  top: 38%;
-  left: 22%;
-}
-
-.home-moon__crater--c {
-  width: 14%;
-  height: 14%;
-  bottom: 18%;
-  left: 16%;
-}
-
-.home-moon__crater--d {
-  width: 5%;
-  height: 5%;
-  top: 48%;
-  left: 46%;
-}
-
-.home-moon__crater--e {
-  width: 4%;
-  height: 4%;
-  top: 52%;
-  left: 54%;
-}
-
 .home-nav {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-home-rhythm);
   width: 100%;
   max-width: 270px;
   margin-top: var(--space-home-rhythm);
 }
 
-/* Home nav — purple SVG glyphs only (no moon disc layer) */
-.screen--home .home-nav .btn-pill {
+.home-nav--dropdown {
+  position: relative;
+  gap: 0;
+}
+
+/* Trigger — match calendar notify toggle (label + chevron) */
+.home-nav .home-nav__trigger {
+  width: 100%;
+  padding-block: 0.85rem 0.95rem;
+  padding-inline: 1.25rem;
+  letter-spacing: normal;
+}
+
+.home-nav__trigger-inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  max-width: 100%;
+}
+
+.home-nav__trigger-text {
+  display: inline-block;
+  letter-spacing: 0.42em;
+  padding-inline-end: 0.35em;
+  text-transform: uppercase;
+  font-family: "Times New Roman", Times, serif;
+  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
+  font-weight: var(--font-times-caps-weight);
+}
+
+.home-nav__chevron {
+  flex-shrink: 0;
+  color: var(--color-ink);
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.home-nav--open .home-nav__chevron {
+  transform: rotate(180deg);
+}
+
+.home-nav__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.62rem;
+  width: 100%;
+  margin-top: 0.62rem;
+}
+
+.home-nav__panel[hidden] {
+  display: none;
+}
+
+/* Home nav rows — purple SVG glyphs + label (same as former stacked pills) */
+.screen--home .home-nav__item {
   flex-direction: row;
   gap: 0.7rem;
   padding-left: 0.85rem;
   padding-right: 0.85rem;
 }
 
-.screen--home .home-nav .home-nav__label {
+.screen--home .home-nav__item .home-nav__label {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+/* Home screen only — you’re already here; other screens keep Home in the menu */
+.screen--home .home-nav .home-nav__item[href="#/"] {
+  display: none;
+}
+
+.screen-header .home-nav {
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: auto;
+  align-self: center;
+  width: 100%;
+  max-width: 270px;
+}
+
+.screen-header .home-nav__item {
+  flex-direction: row;
+  gap: 0.7rem;
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+}
+
+.screen-header .home-nav__item .home-nav__label {
   flex: 1;
   min-width: 0;
   text-align: center;
@@ -442,19 +451,9 @@ button.btn-pill {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  /* Icon ↔ back: tight; margin below = same as gap between phase moons */
+  /* Wordmark ↔ icon ↔ menu: tight; margin below = same as gap between phase moons */
   gap: var(--screen-after-header);
   margin: 0 0 var(--screen-back-to-body);
-}
-
-.screen-header .btn-back {
-  align-self: center;
-  flex-shrink: 0;
-}
-
-/* Today uses flex gap between header / moon / card — don’t double header margin */
-.screen--today .screen-header {
-  margin-bottom: 0;
 }
 
 /* Back control — same chrome as text pills (icon-only) */
@@ -518,7 +517,7 @@ button.btn-pill {
   padding: 0 0.5rem;
 }
 
-/* Today: ink ring + CSS full moon (same disc/craters as home) + curved phase label */
+/* Home: ink ring + live moon canvas + curved phase label */
 
 .today-moon {
   width: 100%;
@@ -583,6 +582,20 @@ button.btn-pill {
   letter-spacing: 0.32em;
   text-transform: uppercase;
   fill: rgba(255, 255, 255, 0.92);
+}
+
+/* Curved along bottom arc — same treatment as phase label; slightly smaller for longer copy */
+.today-moon__phase-text--bottom {
+  font-size: 10px;
+  letter-spacing: 0.24em;
+}
+
+.screen--home .today-moon {
+  margin-bottom: 0.75rem;
+}
+
+.screen--home .card.card--datetime.card--datetime-today {
+  margin-top: var(--space-home-rhythm);
 }
 
 /* Cards */
@@ -753,7 +766,7 @@ button.btn-pill {
 
 /* New Moon Reflection — light lavender panels + ink type (like Today date card + calendar subtitles) */
 .screen--reflection .screen-subtitle {
-  /* Match .screen-header margin-bottom so title sits centered between back and meditation card */
+  /* Match .screen-header margin-bottom so title sits centered between header and meditation card */
   margin: 0 0 var(--screen-back-to-body);
   font-family: "Times New Roman", Times, serif;
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
@@ -1004,17 +1017,6 @@ button.btn-pill {
 
 /* My Past Reflections — same Times + tracking system as New Moon Reflection cards */
 
-#screen-past .screen-subtitle {
-  margin: 0 0 var(--screen-after-header);
-  font-family: "Times New Roman", Times, serif;
-  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  line-height: 1.35;
-  color: var(--color-ink);
-}
-
 .past-reflection-empty {
   margin: 0 auto var(--screen-after-header);
   max-width: min(300px, 92vw);
@@ -1076,17 +1078,6 @@ button.btn-pill {
 }
 
 /* Reflection Void — page chrome matches Past; post cards shared above */
-
-#screen-void .screen-subtitle {
-  margin: 0 0 var(--screen-after-header);
-  font-family: "Times New Roman", Times, serif;
-  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  line-height: 1.35;
-  color: var(--color-ink);
-}
 
 .void-reflection-empty {
   margin: 0 auto var(--screen-after-header);
@@ -1367,17 +1358,6 @@ button.btn-pill {
 
 /* Phases of the Moon — calendar moon stage + curved labels; canvas disc spins inside stable box */
 
-.screen--phases .screen-subtitle {
-  /* Match .screen-header margin-bottom so title sits centered between back and first moon */
-  margin: 0 0 var(--screen-back-to-body);
-  font-family: "Times New Roman", Times, serif;
-  font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
-  line-height: 1.35;
-}
-
 .phases-list {
   list-style: none;
   margin: 0;
@@ -1470,4 +1450,183 @@ button.btn-pill {
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
+}
+
+/* First-open splash — flat crater moon + LUNASCOPE orbiting once; app hidden until done (see app.js) */
+html.splash-dismissed .splash-screen {
+  display: none !important;
+}
+
+/* Don’t show home UI under the splash (fixes transparent overlay bleed-through) */
+html:not(.splash-dismissed) .app-root {
+  visibility: hidden;
+}
+
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 1.25rem;
+  background: transparent;
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s ease;
+}
+
+.splash-screen--out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splash-screen__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-bg);
+}
+
+/* Same star layer + twinkle as #starfield; filled by placeStars() in app.js */
+.splash-starfield.starfield {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  min-width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+  color: var(--color-starfield);
+}
+
+.splash-screen__inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: var(--app-max-width);
+  display: flex;
+  justify-content: center;
+}
+
+.splash-screen__stage {
+  position: relative;
+  width: min(88vw, 320px);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splash-orbit {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.splash-orbit__spin {
+  transform-origin: 200px 200px;
+  animation: splash-orbit-spin 2.5s linear 1 forwards;
+}
+
+@keyframes splash-orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.splash-orbit__text {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  fill: var(--color-ink);
+  filter: drop-shadow(var(--shadow-brand));
+}
+
+/* Flat vector moon — same tokens as calendar / legacy home disc (lavender surface + craters) */
+.splash-moon {
+  position: relative;
+  z-index: 1;
+  width: min(44vw, 156px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: splash-moon-pop 0.95s cubic-bezier(0.33, 1.45, 0.52, 1) forwards;
+  transform: scale(0.52);
+  opacity: 0.92;
+}
+
+.splash-moon__disc {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--moon-surface);
+  position: relative;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    inset -3px 2px 8px rgba(0, 0, 0, 0.1),
+    var(--shadow-moon);
+}
+
+.splash-moon__crater {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--moon-crater);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
+.splash-moon__crater--a {
+  width: 28%;
+  height: 28%;
+  top: 12%;
+  right: 14%;
+}
+
+.splash-moon__crater--b {
+  width: 16%;
+  height: 16%;
+  top: 38%;
+  left: 22%;
+}
+
+.splash-moon__crater--c {
+  width: 14%;
+  height: 14%;
+  bottom: 18%;
+  left: 16%;
+}
+
+@keyframes splash-moon-pop {
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-orbit__spin {
+    animation: none;
+  }
+
+  .splash-moon {
+    animation: none;
+    transform: scale(1);
+    opacity: 1;
+  }
 }

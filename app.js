@@ -8,7 +8,6 @@
   var routes = {
     "": "home",
     "/": "home",
-    "/today": "today",
     "/calendar": "calendar",
     "/phases": "phases",
     "/reflection": "reflection",
@@ -1148,11 +1147,105 @@
     document.title = id === "home" ? "LUNASCOPE" : "LUNASCOPE — " + id;
   }
 
+  function closeNavRoot(root) {
+    if (!root) {
+      return;
+    }
+    var btn = root.querySelector(".home-nav__trigger");
+    var panel = root.querySelector(".home-nav__panel");
+    if (!btn || !panel) {
+      return;
+    }
+    btn.setAttribute("aria-expanded", "false");
+    panel.setAttribute("hidden", "");
+    root.classList.remove("home-nav--open");
+  }
+
+  function closeAllAppNavMenus() {
+    var roots = document.querySelectorAll("[data-app-nav]");
+    for (var i = 0; i < roots.length; i++) {
+      closeNavRoot(roots[i]);
+    }
+    scheduleStarfield();
+  }
+
+  function initAppNavMenus() {
+    var roots = document.querySelectorAll("[data-app-nav]");
+    if (!roots.length) {
+      return;
+    }
+
+    function setRootOpen(root, open) {
+      var btn = root.querySelector(".home-nav__trigger");
+      var panel = root.querySelector(".home-nav__panel");
+      if (!btn || !panel) {
+        return;
+      }
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) {
+        panel.removeAttribute("hidden");
+        root.classList.add("home-nav--open");
+      } else {
+        panel.setAttribute("hidden", "");
+        root.classList.remove("home-nav--open");
+      }
+      scheduleStarfield();
+    }
+
+    for (var r = 0; r < roots.length; r++) {
+      (function (root) {
+        var btn = root.querySelector(".home-nav__trigger");
+        if (!btn) {
+          return;
+        }
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var isOpen = btn.getAttribute("aria-expanded") === "true";
+          if (!isOpen) {
+            for (var j = 0; j < roots.length; j++) {
+              if (roots[j] !== root) {
+                closeNavRoot(roots[j]);
+              }
+            }
+          }
+          setRootOpen(root, !isOpen);
+        });
+
+        var panel = root.querySelector(".home-nav__panel");
+        if (!panel) {
+          return;
+        }
+        var links = panel.querySelectorAll('a[href^="#"]');
+        for (var k = 0; k < links.length; k++) {
+          links[k].addEventListener("click", function () {
+            closeAllAppNavMenus();
+          });
+        }
+      })(roots[r]);
+    }
+
+    document.addEventListener("click", function (e) {
+      for (var i = 0; i < roots.length; i++) {
+        if (!roots[i].contains(e.target)) {
+          closeNavRoot(roots[i]);
+        }
+      }
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape") {
+        return;
+      }
+      closeAllAppNavMenus();
+    });
+  }
+
   function onHashChange() {
     var route = getRouteId();
     if (route !== "reflection") {
       pauseReflectionMeditationIfNeeded();
     }
+    closeAllAppNavMenus();
     showScreen(route);
     scheduleStarfield();
     moonDrawState.key = null;
@@ -1251,13 +1344,19 @@
   var resizeTimer;
 
   function scheduleStarfield() {
-    var starfield = document.getElementById("starfield");
-    if (!starfield) {
-      return;
-    }
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
-        placeStars(starfield);
+        var starfield = document.getElementById("starfield");
+        if (starfield) {
+          placeStars(starfield);
+        }
+        var splashStars = document.getElementById("splash-starfield");
+        if (
+          splashStars &&
+          !document.documentElement.classList.contains("splash-dismissed")
+        ) {
+          placeStars(splashStars);
+        }
       });
     });
   }
@@ -1638,9 +1737,52 @@
     notifyScheduleRefresh();
   }
 
+  function initSplashScreen() {
+    var splash = document.getElementById("splash-screen");
+    if (!splash) {
+      return;
+    }
+    if (document.documentElement.classList.contains("splash-dismissed")) {
+      splash.remove();
+      return;
+    }
+
+    splash.setAttribute("aria-hidden", "false");
+    scheduleStarfield();
+
+    var reduce =
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function dismissSplash() {
+      try {
+        localStorage.setItem("lunascopeSplashSeen", "1");
+      } catch (e) {}
+      splash.classList.add("splash-screen--out");
+      splash.setAttribute("aria-hidden", "true");
+      window.setTimeout(function () {
+        if (splash.parentNode) {
+          splash.remove();
+        }
+        document.documentElement.classList.add("splash-dismissed");
+        scheduleStarfield();
+      }, 480);
+    }
+
+    if (reduce) {
+      dismissSplash();
+      return;
+    }
+
+    /* Orbit animation 2.5s — hand off to home after one full turn + short beat */
+    window.setTimeout(dismissSplash, 2900);
+  }
+
   initCalendarNotify();
   initReflectionArchive();
   initReflectionMeditation();
+  initAppNavMenus();
 
+  initSplashScreen();
   onHashChange();
 })();

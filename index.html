@@ -11,188 +11,112 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      try {
+        if (localStorage.getItem("lunascopeSplashSeen") === "1") {
+          document.documentElement.classList.add("splash-dismissed");
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
+    <div
+      id="splash-screen"
+      class="splash-screen"
+      role="img"
+      aria-label="LUNASCOPE"
+      aria-hidden="true"
+    >
+      <div class="splash-screen__bg" aria-hidden="true">
+        <div id="splash-starfield" class="starfield splash-starfield"></div>
+      </div>
+      <div class="splash-screen__inner">
+        <div class="splash-screen__stage">
+          <svg
+            class="splash-orbit"
+            viewBox="0 0 400 400"
+            width="400"
+            height="400"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <defs>
+              <path
+                id="splash-orbit-path"
+                fill="none"
+                d="M 200 62 A 138 138 0 1 1 200 338 A 138 138 0 1 1 200 62"
+              />
+            </defs>
+            <g class="splash-orbit__spin">
+              <text class="splash-orbit__text">
+                <textPath href="#splash-orbit-path" startOffset="50%" text-anchor="middle">
+                  LUNASCOPE
+                </textPath>
+              </text>
+            </g>
+          </svg>
+          <div class="splash-moon" aria-hidden="true">
+            <div class="splash-moon__disc">
+              <span class="splash-moon__crater splash-moon__crater--a"></span>
+              <span class="splash-moon__crater splash-moon__crater--b"></span>
+              <span class="splash-moon__crater splash-moon__crater--c"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="starfield" id="starfield" aria-hidden="true"></div>
     <div class="app-root">
       <!-- Home — Figma: Home Page (1:2) -->
       <section id="screen-home" class="screen screen--home" data-node-id="1:2" aria-label="Home">
         <header class="home-header">
-          <div class="home-moon" aria-hidden="true">
-            <div class="home-moon__spin">
-              <div class="home-moon__disc">
-                <span class="home-moon__crater home-moon__crater--a"></span>
-                <span class="home-moon__crater home-moon__crater--b"></span>
-                <span class="home-moon__crater home-moon__crater--c"></span>
-                <span class="home-moon__crater home-moon__crater--d"></span>
-                <span class="home-moon__crater home-moon__crater--e"></span>
+          <div class="today-moon" aria-hidden="true">
+            <div class="today-moon__stage">
+              <div class="today-moon__image">
+                <div class="today-moon__spin">
+                  <canvas
+                    id="today-moon-canvas"
+                    class="today-moon__canvas"
+                    width="400"
+                    height="400"
+                    aria-hidden="true"
+                  ></canvas>
+                </div>
               </div>
+              <svg class="today-moon__phase-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
+                <defs>
+                  <path
+                    id="today-moon-phase-arc"
+                    fill="none"
+                    d="M 24 160 A 136 136 0 0 1 296 160"
+                  />
+                  <!-- Bottom semicircle — same radius as top arc; sweep picks lower arc for upright lettering -->
+                  <path
+                    id="today-moon-caption-arc"
+                    fill="none"
+                    d="M 24 160 A 136 136 0 0 0 296 160"
+                  />
+                </defs>
+                <text class="today-moon__phase-text">
+                  <textPath
+                    id="today-phase-label"
+                    href="#today-moon-phase-arc"
+                    startOffset="50%"
+                    text-anchor="middle"
+                  >
+                    FULL MOON
+                  </textPath>
+                </text>
+                <text class="today-moon__phase-text today-moon__phase-text--bottom">
+                  <textPath href="#today-moon-caption-arc" startOffset="50%" text-anchor="middle">
+                    CURRENT MOON PHASE
+                  </textPath>
+                </text>
+              </svg>
             </div>
           </div>
           <h1 class="brand-title">LUNASCOPE</h1>
         </header>
-        <nav class="home-nav" aria-label="Main">
-          <a class="btn-pill" href="#/today">
-            <span class="home-nav__icon" aria-hidden="true">
-              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="12" r="6.75" fill="none" stroke="currentColor" stroke-width="1.35" />
-                <circle cx="12" cy="12" r="2" fill="currentColor" />
-              </svg>
-            </span>
-            <span class="home-nav__label">Today’s Moon Phase</span>
-          </a>
-          <a class="btn-pill" href="#/calendar">
-            <span class="home-nav__icon" aria-hidden="true">
-              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.35"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
-                />
-                <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
-                <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
-              </svg>
-            </span>
-            <span class="home-nav__label">Full Moon Calendar</span>
-          </a>
-          <a class="btn-pill" href="#/phases">
-            <span class="home-nav__icon" aria-hidden="true">
-              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.35"
-                  stroke-linecap="round"
-                  d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
-                />
-                <!-- Centers on the arc: left t≈0.2, peak, right t≈0.75 (cubic sample) -->
-                <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
-                <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
-                <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
-              </svg>
-            </span>
-            <span class="home-nav__label">Phases of the Moon</span>
-          </a>
-          <a class="btn-pill" href="#/reflection">
-            <span class="home-nav__icon" aria-hidden="true">
-              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <!-- Sparkles behind brain (filled diamonds — same purple via currentColor) -->
-                <g fill="currentColor" stroke="none">
-                  <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
-                  <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
-                  <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
-                  <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
-                </g>
-                <g
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.35"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <!-- Top-down brain: bilobed silhouette (wider mid, slight top groove, tapers toward base) -->
-                  <path
-                    d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
-                  />
-                  <!-- Longitudinal fissure -->
-                  <line x1="12" y1="7.2" x2="12" y2="17.95" />
-                  <!-- Lobe-like squiggles (open toward midline) -->
-                  <path
-                    d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
-                  />
-                  <path
-                    d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
-                  />
-                </g>
-              </svg>
-            </span>
-            <span class="home-nav__label">Reflection Prompt</span>
-          </a>
-          <a class="btn-pill" href="#/past">
-            <span class="home-nav__icon" aria-hidden="true">
-              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.35"
-                  stroke-linecap="round"
-                  d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
-                />
-              </svg>
-            </span>
-            <span class="home-nav__label">My Past Reflections</span>
-          </a>
-          <a class="btn-pill" href="#/void">
-            <span class="home-nav__icon" aria-hidden="true">
-              <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
-                <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
-                <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
-              </svg>
-            </span>
-            <span class="home-nav__label">Reflection Void</span>
-          </a>
-        </nav>
-      </section>
-
-      <!-- Today’s Moon Phase — Figma: 1:3 (centered back → moon disc → date card) -->
-      <section id="screen-today" class="screen screen--stack screen--today is-hidden" data-node-id="1:3" aria-label="Today’s Moon Phase">
-        <header class="screen-header">
-          <h1 class="screen-header__title">
-            <span class="screen-header__icon-shadow" aria-hidden="true">
-              <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <circle cx="12" cy="12" r="6.75" fill="none" stroke="currentColor" stroke-width="1.35" />
-                <circle cx="12" cy="12" r="2" fill="currentColor" />
-              </svg>
-            </span>
-            <span class="u-visually-hidden">Today’s Moon Phase</span>
-          </h1>
-          <a class="btn-back" href="#/" aria-label="Back to home">
-            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path
-                fill="currentColor"
-                d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
-              />
-            </svg>
-          </a>
-        </header>
-        <div class="today-moon">
-          <div class="today-moon__stage">
-            <div class="today-moon__image">
-              <div class="today-moon__spin">
-                <canvas
-                  id="today-moon-canvas"
-                  class="today-moon__canvas"
-                  width="400"
-                  height="400"
-                  aria-hidden="true"
-                ></canvas>
-              </div>
-            </div>
-            <svg class="today-moon__phase-svg" viewBox="0 0 320 320" aria-hidden="true" focusable="false">
-              <defs>
-                <path
-                  id="today-moon-phase-arc"
-                  fill="none"
-                  d="M 24 160 A 136 136 0 0 1 296 160"
-                />
-              </defs>
-              <text class="today-moon__phase-text">
-                <textPath
-                  id="today-phase-label"
-                  href="#today-moon-phase-arc"
-                  startOffset="50%"
-                  text-anchor="middle"
-                >
-                  FULL MOON
-                </textPath>
-              </text>
-            </svg>
-          </div>
-        </div>
         <div class="card card--datetime card--datetime-today">
           <p class="card__label card__label--today">DATE AND TIME</p>
           <div class="card__rule card__rule--today" role="presentation"></div>
@@ -203,12 +127,146 @@
           <div class="card__rule card__rule--today" role="presentation"></div>
           <p id="today-time" class="card__time card__time--today"></p>
         </div>
+        <nav class="home-nav home-nav--dropdown" aria-label="Main" data-app-nav>
+          <button
+            type="button"
+            class="btn-pill home-nav__trigger"
+            id="app-nav-trigger-home"
+            aria-expanded="false"
+            aria-controls="app-nav-panel-home"
+            aria-haspopup="true"
+          >
+            <span class="home-nav__trigger-inner">
+              <span class="home-nav__trigger-text">MENU</span>
+              <svg
+                class="home-nav__chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </span>
+          </button>
+          <div class="home-nav__panel" id="app-nav-panel-home" role="group" aria-labelledby="app-nav-trigger-home" hidden>
+            <a class="btn-pill home-nav__item" href="#/">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.25a.75.75 0 0 1-.75-.75V14.5h-3v4.75a.75.75 0 0 1-.75.75H5.5a1 1 0 0 1-1-1v-8.5z"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">Home</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/calendar">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                  />
+                  <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                  <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Full Moon Calendar</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/phases">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                  />
+                  <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                  <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                  <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Phases of the Moon</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/reflection">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <g fill="currentColor" stroke="none">
+                    <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  </g>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                    />
+                    <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                    <path
+                      d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                    />
+                    <path
+                      d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Prompt</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/past">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">My Past Reflections</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/void">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                  <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                  <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Void</span>
+            </a>
+          </div>
+        </nav>
       </section>
 
       <!-- Full Moon Calendar — Figma: 2023:12 (wireframe excerpt) -->
       <section id="screen-calendar" class="screen screen--scroll screen--calendar is-hidden" data-node-id="2023:12" aria-label="Full Moon Calendar">
         <header class="screen-header">
           <h1 class="screen-header__title">
+            <span class="screen-header__wordmark">LUNASCOPE</span>
             <span class="screen-header__icon-shadow" aria-hidden="true">
               <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path
@@ -223,13 +281,140 @@
                 <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
               </svg>
             </span>
-            <span class="u-visually-hidden">Full Moon Calendar</span>
           </h1>
-          <a class="btn-back" href="#/" aria-label="Back to home">
-            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
-            </svg>
-          </a>
+          <nav class="home-nav home-nav--dropdown home-nav--in-header" aria-label="Main" data-app-nav>
+          <button
+            type="button"
+            class="btn-pill home-nav__trigger"
+            id="app-nav-trigger-calendar"
+            aria-expanded="false"
+            aria-controls="app-nav-panel-calendar"
+            aria-haspopup="true"
+          >
+            <span class="home-nav__trigger-inner">
+              <span class="home-nav__trigger-text">MENU</span>
+              <svg
+                class="home-nav__chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </span>
+          </button>
+          <div class="home-nav__panel" id="app-nav-panel-calendar" role="group" aria-labelledby="app-nav-trigger-calendar" hidden>
+            <a class="btn-pill home-nav__item" href="#/">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.25a.75.75 0 0 1-.75-.75V14.5h-3v4.75a.75.75 0 0 1-.75.75H5.5a1 1 0 0 1-1-1v-8.5z"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">Home</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/calendar">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                  />
+                  <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                  <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Full Moon Calendar</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/phases">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                  />
+                  <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                  <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                  <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Phases of the Moon</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/reflection">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <g fill="currentColor" stroke="none">
+                    <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  </g>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                    />
+                    <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                    <path
+                      d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                    />
+                    <path
+                      d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Prompt</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/past">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">My Past Reflections</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/void">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                  <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                  <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Void</span>
+            </a>
+          </div>
+        </nav>
         </header>
         <h2 id="calendar-year-heading" class="screen-subtitle"></h2>
         <p class="screen-hint">Click to enable notifications for the next full moon</p>
@@ -489,6 +674,7 @@
       <section id="screen-phases" class="screen screen--scroll screen--phases is-hidden" data-node-id="2023:26" aria-label="Phases of the Moon">
         <header class="screen-header">
           <h1 class="screen-header__title">
+            <span class="screen-header__wordmark">LUNASCOPE</span>
             <span class="screen-header__icon-shadow" aria-hidden="true">
               <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <!-- Shift arc + moons left so peak moon (was x≈13.5) sits on 24×24 center (12) -->
@@ -506,15 +692,141 @@
                 </g>
               </svg>
             </span>
-            <span class="u-visually-hidden">Phases of the Moon</span>
           </h1>
-          <a class="btn-back" href="#/" aria-label="Back to home">
-            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
-            </svg>
-          </a>
+          <nav class="home-nav home-nav--dropdown home-nav--in-header" aria-label="Main" data-app-nav>
+          <button
+            type="button"
+            class="btn-pill home-nav__trigger"
+            id="app-nav-trigger-phases"
+            aria-expanded="false"
+            aria-controls="app-nav-panel-phases"
+            aria-haspopup="true"
+          >
+            <span class="home-nav__trigger-inner">
+              <span class="home-nav__trigger-text">MENU</span>
+              <svg
+                class="home-nav__chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </span>
+          </button>
+          <div class="home-nav__panel" id="app-nav-panel-phases" role="group" aria-labelledby="app-nav-trigger-phases" hidden>
+            <a class="btn-pill home-nav__item" href="#/">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.25a.75.75 0 0 1-.75-.75V14.5h-3v4.75a.75.75 0 0 1-.75.75H5.5a1 1 0 0 1-1-1v-8.5z"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">Home</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/calendar">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                  />
+                  <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                  <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Full Moon Calendar</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/phases">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                  />
+                  <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                  <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                  <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Phases of the Moon</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/reflection">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <g fill="currentColor" stroke="none">
+                    <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  </g>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                    />
+                    <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                    <path
+                      d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                    />
+                    <path
+                      d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Prompt</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/past">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">My Past Reflections</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/void">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                  <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                  <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Void</span>
+            </a>
+          </div>
+        </nav>
         </header>
-        <h2 class="screen-subtitle">Phases of the Moon</h2>
         <ol class="phases-list">
           <li class="phase-item" aria-label="Waning crescent">
             <div class="phase-item__moon">
@@ -707,6 +1019,7 @@
       <section id="screen-reflection" class="screen screen--stack screen--reflection is-hidden" data-node-id="1:5" aria-label="Reflection Prompt">
         <header class="screen-header">
           <h1 class="screen-header__title">
+            <span class="screen-header__wordmark">LUNASCOPE</span>
             <span class="screen-header__icon-shadow" aria-hidden="true">
               <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <g fill="currentColor" stroke="none">
@@ -735,13 +1048,140 @@
                 </g>
               </svg>
             </span>
-            <span class="u-visually-hidden">Reflection Prompt</span>
           </h1>
-          <a class="btn-back" href="#/" aria-label="Back to home">
-            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
-            </svg>
-          </a>
+          <nav class="home-nav home-nav--dropdown home-nav--in-header" aria-label="Main" data-app-nav>
+          <button
+            type="button"
+            class="btn-pill home-nav__trigger"
+            id="app-nav-trigger-reflection"
+            aria-expanded="false"
+            aria-controls="app-nav-panel-reflection"
+            aria-haspopup="true"
+          >
+            <span class="home-nav__trigger-inner">
+              <span class="home-nav__trigger-text">MENU</span>
+              <svg
+                class="home-nav__chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </span>
+          </button>
+          <div class="home-nav__panel" id="app-nav-panel-reflection" role="group" aria-labelledby="app-nav-trigger-reflection" hidden>
+            <a class="btn-pill home-nav__item" href="#/">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.25a.75.75 0 0 1-.75-.75V14.5h-3v4.75a.75.75 0 0 1-.75.75H5.5a1 1 0 0 1-1-1v-8.5z"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">Home</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/calendar">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                  />
+                  <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                  <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Full Moon Calendar</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/phases">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                  />
+                  <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                  <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                  <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Phases of the Moon</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/reflection">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <g fill="currentColor" stroke="none">
+                    <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  </g>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                    />
+                    <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                    <path
+                      d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                    />
+                    <path
+                      d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Prompt</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/past">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">My Past Reflections</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/void">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                  <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                  <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Void</span>
+            </a>
+          </div>
+        </nav>
         </header>
         <h2 class="screen-subtitle">New Moon Reflection</h2>
         <audio
@@ -823,6 +1263,7 @@
       >
         <header class="screen-header">
           <h1 class="screen-header__title">
+            <span class="screen-header__wordmark">LUNASCOPE</span>
             <span class="screen-header__icon-shadow" aria-hidden="true">
               <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path
@@ -834,15 +1275,141 @@
                 />
               </svg>
             </span>
-            <span class="u-visually-hidden">My Past Reflections</span>
           </h1>
-          <a class="btn-back" href="#/" aria-label="Back to home">
-            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
-            </svg>
-          </a>
+          <nav class="home-nav home-nav--dropdown home-nav--in-header" aria-label="Main" data-app-nav>
+          <button
+            type="button"
+            class="btn-pill home-nav__trigger"
+            id="app-nav-trigger-past"
+            aria-expanded="false"
+            aria-controls="app-nav-panel-past"
+            aria-haspopup="true"
+          >
+            <span class="home-nav__trigger-inner">
+              <span class="home-nav__trigger-text">MENU</span>
+              <svg
+                class="home-nav__chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </span>
+          </button>
+          <div class="home-nav__panel" id="app-nav-panel-past" role="group" aria-labelledby="app-nav-trigger-past" hidden>
+            <a class="btn-pill home-nav__item" href="#/">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.25a.75.75 0 0 1-.75-.75V14.5h-3v4.75a.75.75 0 0 1-.75.75H5.5a1 1 0 0 1-1-1v-8.5z"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">Home</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/calendar">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                  />
+                  <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                  <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Full Moon Calendar</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/phases">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                  />
+                  <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                  <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                  <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Phases of the Moon</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/reflection">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <g fill="currentColor" stroke="none">
+                    <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  </g>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                    />
+                    <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                    <path
+                      d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                    />
+                    <path
+                      d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Prompt</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/past">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">My Past Reflections</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/void">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                  <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                  <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Void</span>
+            </a>
+          </div>
+        </nav>
         </header>
-        <h2 class="screen-subtitle screen-subtitle--on-bg">My Past Reflections</h2>
         <p id="past-reflection-empty" class="past-reflection-empty" role="status">
           No reflections saved yet. Write one on the Reflection Prompt page — they will appear here.
         </p>
@@ -858,6 +1425,7 @@
       >
         <header class="screen-header">
           <h1 class="screen-header__title">
+            <span class="screen-header__wordmark">LUNASCOPE</span>
             <span class="screen-header__icon-shadow" aria-hidden="true">
               <svg class="screen-header__glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
@@ -865,15 +1433,141 @@
                 <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
               </svg>
             </span>
-            <span class="u-visually-hidden">Reflection Void</span>
           </h1>
-          <a class="btn-back" href="#/" aria-label="Back to home">
-            <svg class="btn-back__icon" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <path fill="currentColor" d="M15.41 16.59 10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
-            </svg>
-          </a>
+          <nav class="home-nav home-nav--dropdown home-nav--in-header" aria-label="Main" data-app-nav>
+          <button
+            type="button"
+            class="btn-pill home-nav__trigger"
+            id="app-nav-trigger-void"
+            aria-expanded="false"
+            aria-controls="app-nav-panel-void"
+            aria-haspopup="true"
+          >
+            <span class="home-nav__trigger-inner">
+              <span class="home-nav__trigger-text">MENU</span>
+              <svg
+                class="home-nav__chevron"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  fill="currentColor"
+                  d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+                />
+              </svg>
+            </span>
+          </button>
+          <div class="home-nav__panel" id="app-nav-panel-void" role="group" aria-labelledby="app-nav-trigger-void" hidden>
+            <a class="btn-pill home-nav__item" href="#/">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M4.5 10.5 12 4.5l7.5 6V19a1 1 0 0 1-1 1h-4.25a.75.75 0 0 1-.75-.75V14.5h-3v4.75a.75.75 0 0 1-.75.75H5.5a1 1 0 0 1-1-1v-8.5z"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">Home</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/calendar">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M7 5.5h10a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5H7a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 7 5.5zM5.5 9.5h13"
+                  />
+                  <path fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" d="M9 4v2.5M15 4v2.5" />
+                  <circle cx="12" cy="14.5" r="2.25" fill="currentColor" opacity="0.9" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Full Moon Calendar</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/phases">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 14.5c1.2-3.2 3.8-5.5 7-5.5s5.8 2.3 7 5.5"
+                  />
+                  <circle cx="7.38" cy="12.7" r="1.85" fill="currentColor" />
+                  <circle cx="13.5" cy="9" r="2.1" fill="currentColor" opacity="0.85" />
+                  <circle cx="19.35" cy="12.3" r="1.85" fill="currentColor" opacity="0.65" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Phases of the Moon</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/reflection">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <g fill="currentColor" stroke="none">
+                    <path transform="translate(5.25 5.5) scale(0.9)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(17.1 4.85) scale(0.92)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(19.15 7.45) scale(0.88)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                    <path transform="translate(3.35 11.9) scale(0.58)" d="M0-1.6L1.15 0L0 1.6L-1.15 0z" />
+                  </g>
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M12 6.4C10 6.2 8.5 7 7.5 8.6 6.5 10.5 5.9 12.5 6.2 14.8 6.5 16.5 7.8 17.8 9.8 18.4 10.9 18.65 11.5 18.55 12 18.45 12.5 18.55 13.1 18.65 14.2 18.4 16.2 17.8 17.5 16.5 17.8 14.8 18.1 12.5 17.5 10.5 16.5 8.6 15.5 7 14 6.2 12 6.4z"
+                    />
+                    <line x1="12" y1="7.2" x2="12" y2="17.95" />
+                    <path
+                      d="M9.3 9.3C8.1 10.8 7.5 12.6 7.9 14.4 8.3 16 9.6 16.5 11 16.15 11.35 16.05 11.45 15.75 11.45 15.45M8.5 11.8C8.1 12.9 8.35 14.1 9.1 14.85"
+                    />
+                    <path
+                      d="M14.7 9.3C15.9 10.8 16.5 12.6 16.1 14.4 15.7 16 14.4 16.5 13 16.15 12.65 16.05 12.55 15.75 12.55 15.45M15.5 11.8C15.9 12.9 15.65 14.1 14.9 14.85"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Prompt</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/past">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.35"
+                    stroke-linecap="round"
+                    d="M6.5 8.5h11M6.5 12h11M6.5 15.5h7.5"
+                  />
+                </svg>
+              </span>
+              <span class="home-nav__label">My Past Reflections</span>
+            </a>
+            <a class="btn-pill home-nav__item" href="#/void">
+              <span class="home-nav__icon" aria-hidden="true">
+                <svg class="home-nav__glyph" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.35" />
+                  <circle cx="12" cy="12" r="3.75" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.55" />
+                  <circle cx="12" cy="12" r="1.35" fill="currentColor" opacity="0.45" />
+                </svg>
+              </span>
+              <span class="home-nav__label">Reflection Void</span>
+            </a>
+          </div>
+        </nav>
         </header>
-        <h2 class="screen-subtitle screen-subtitle--on-bg">Reflection Void…</h2>
         <p id="void-reflection-empty" class="void-reflection-empty" role="status">
           No posts yet. From Reflection Prompt, choose “Post to Reflection Void” — your words appear here under a random constellation name, with the date you posted.
         </p>
