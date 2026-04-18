@@ -187,6 +187,13 @@
     var cy = h / 2;
     var r = Math.min(w, h) * 0.48;
     var k = ill.fraction;
+    /* Sampled “new moon” instants can still carry a tiny fraction; that draws a hairline lit strip. */
+    var byName = moonPhaseLabel(ill.phase);
+    if (byName === "NEW MOON") {
+      k = 0;
+    } else if (byName === "FULL MOON") {
+      k = 1;
+    }
     var waxing = ill.phase < 0.5;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, w, h);
@@ -225,6 +232,34 @@
   function illuminationForPhaseLabel(wantLabel) {
     if (phaseIlluminationCache[wantLabel]) {
       return phaseIlluminationCache[wantLabel];
+    }
+    /*
+     * Crescents: the scan often hits the first slice after new moon (~2% lit). Use a
+     * slightly larger illustrative fraction so the phase reads clearly on screen.
+     */
+    if (wantLabel === "WAXING CRESCENT") {
+      var waxCres = { fraction: 0.1, phase: 0.12, angle: 0 };
+      phaseIlluminationCache[wantLabel] = waxCres;
+      return waxCres;
+    }
+    if (wantLabel === "WANING CRESCENT") {
+      var waneCres = { fraction: 0.1, phase: 0.88, angle: 0 };
+      phaseIlluminationCache[wantLabel] = waneCres;
+      return waneCres;
+    }
+    /*
+     * Gibbous: first scan hit is often still ~full (~98% lit). Nudge fraction down so the
+     * dark limb is visible (NH-style chart: shadow on the right when waning).
+     */
+    if (wantLabel === "WANING GIBBOUS") {
+      var waneGib = { fraction: 0.9, phase: 0.62, angle: 0 };
+      phaseIlluminationCache[wantLabel] = waneGib;
+      return waneGib;
+    }
+    if (wantLabel === "WAXING GIBBOUS") {
+      var waxGib = { fraction: 0.9, phase: 0.38, angle: 0 };
+      phaseIlluminationCache[wantLabel] = waxGib;
+      return waxGib;
     }
     var t0 = new Date(2025, 0, 1).getTime();
     var t1 = new Date(2028, 0, 1).getTime();
