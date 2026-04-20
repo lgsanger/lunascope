@@ -1121,10 +1121,9 @@
 
   function updateRealTimeDisplays() {
     var now = new Date();
-    var line1 = document.getElementById("today-date-line1");
-    var line2 = document.getElementById("today-date-line2");
-    var timeEl = document.getElementById("today-time");
-    if (line1 && line2) {
+    var dateLine = document.getElementById("today-date-line");
+    var timeLine = document.getElementById("today-time-line");
+    if (dateLine && timeLine) {
       var weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
       var months = [
         "Jan",
@@ -1140,19 +1139,23 @@
         "Nov",
         "Dec",
       ];
-      var w = weekdays[now.getDay()];
-      var mon = months[now.getMonth()];
-      line1.textContent = w + ", " + mon + " " + ordinalDay(now.getDate());
-      line2.textContent = String(now.getFullYear());
-    }
-    if (timeEl) {
+      var w = weekdays[now.getDay()].toUpperCase();
+      var mon = months[now.getMonth()].toUpperCase();
+      dateLine.textContent =
+        w +
+        ", " +
+        mon +
+        " " +
+        ordinalDay(now.getDate()).toUpperCase() +
+        " " +
+        now.getFullYear();
       var h = now.getHours();
       var h12 = h % 12;
       if (h12 === 0) {
         h12 = 12;
       }
       var ampm = h >= 12 ? "PM" : "AM";
-      timeEl.textContent =
+      timeLine.textContent =
         pad2(h12) +
         ":" +
         pad2(now.getMinutes()) +
@@ -1777,10 +1780,6 @@
     if (!splash) {
       return;
     }
-    if (document.documentElement.classList.contains("splash-dismissed")) {
-      splash.remove();
-      return;
-    }
 
     splash.setAttribute("aria-hidden", "false");
     scheduleStarfield();
@@ -1790,9 +1789,6 @@
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     function dismissSplash() {
-      try {
-        localStorage.setItem("lunascopeSplashSeen", "1");
-      } catch (e) {}
       splash.classList.add("splash-screen--out");
       splash.setAttribute("aria-hidden", "true");
       window.setTimeout(function () {

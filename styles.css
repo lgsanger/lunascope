@@ -623,57 +623,35 @@ button.btn-pill {
   align-items: stretch;
 }
 
-.card__label.card__label--today {
-  margin: 0;
-  align-self: center;
-  text-align: center;
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: var(--font-body-weight);
-  letter-spacing: 0.42em;
-  color: var(--color-ink);
-  text-transform: uppercase;
-}
-
-.card__rule--today {
-  align-self: stretch;
-  width: auto;
-  max-width: none;
-  height: 1px;
-  margin: 0;
-  padding: 0;
-  border: none;
-  background: var(--color-border);
-}
-
-.card__date.card__date--today,
-.card__time.card__time--today {
-  font-family: var(--font-body);
-  color: var(--color-ink);
-}
-
-.card__date.card__date--today {
+/* Home — date, then time below (Swear Display, caps, wide tracking) */
+.card__datetime-today-stack {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.2em;
-  font-size: clamp(1.4rem, 4.5vw, 1.75rem);
-  line-height: 1.2;
-  margin: 0;
-  text-align: center;
+  gap: 0.45em;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.card__date.card__date--today .card__date-line {
-  display: block;
+.card__datetime-today-line {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 0.15rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.58rem, 2.1vw, 0.82rem);
   font-weight: var(--font-body-weight);
+  line-height: 1.35;
+  letter-spacing: 0.18em;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-ink);
 }
 
-.card__time.card__time--today {
-  margin: 0;
-  font-size: clamp(1.15rem, 3.6vw, 1.4rem);
-  font-weight: var(--font-body-weight);
-  text-align: center;
-  align-self: center;
+.card__datetime-today-line--time {
+  font-size: clamp(0.72rem, 2.65vw, 1rem);
+  letter-spacing: 0.22em;
 }
 
 .card__label {
@@ -1431,7 +1409,7 @@ button.btn-pill {
   min-height: 100dvh;
 }
 
-/* First-open splash — flat crater moon + LUNASCOPE orbiting once; app hidden until done (see app.js) */
+/* Splash — flat crater moon + LUNASCOPE orbiting once per load; app hidden until done (see app.js) */
 html.splash-dismissed .splash-screen {
   display: none !important;
 }

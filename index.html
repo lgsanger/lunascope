@@ -19,13 +19,6 @@
       })();
     </script>
     <link rel="stylesheet" href="styles.css" />
-    <script>
-      try {
-        if (localStorage.getItem("lunascopeSplashSeen") === "1") {
-          document.documentElement.classList.add("splash-dismissed");
-        }
-      } catch (e) {}
-    </script>
   </head>
   <body>
     <div
@@ -125,15 +118,11 @@
             </div>
           </div>
         </header>
-        <div class="card card--datetime card--datetime-today">
-          <p class="card__label card__label--today">DATE AND TIME</p>
-          <div class="card__rule card__rule--today" role="presentation"></div>
-          <p class="card__date card__date--today">
-            <span id="today-date-line1" class="card__date-line"></span>
-            <span id="today-date-line2" class="card__date-line"></span>
-          </p>
-          <div class="card__rule card__rule--today" role="presentation"></div>
-          <p id="today-time" class="card__time card__time--today"></p>
+        <div class="card card--datetime card--datetime-today" aria-label="Date and time">
+          <div class="card__datetime-today-stack" aria-live="polite">
+            <p id="today-date-line" class="card__datetime-today-line"></p>
+            <p id="today-time-line" class="card__datetime-today-line card__datetime-today-line--time"></p>
+          </div>
         </div>
         <nav class="home-nav home-nav--dropdown" aria-label="Main" data-app-nav>
           <button
