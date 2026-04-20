@@ -4,12 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LUNASCOPE</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bhavuka&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin />
+    <link rel="preconnect" href="https://p.typekit.net" crossorigin />
+    <!-- Body font (Swear Display): add your Adobe Fonts web-project kit ID below, or self-host with @font-face in styles.css -->
+    <script>
+      window.LUNASCOPE_ADOBE_FONTS_KIT = window.LUNASCOPE_ADOBE_FONTS_KIT || "";
+      (function () {
+        var k = window.LUNASCOPE_ADOBE_FONTS_KIT;
+        if (!k || !String(k).trim()) return;
+        var l = document.createElement("link");
+        l.rel = "stylesheet";
+        l.href = "https://use.typekit.net/" + String(k).trim() + ".css";
+        document.head.appendChild(l);
+      })();
+    </script>
     <link rel="stylesheet" href="styles.css" />
     <script>
       try {
@@ -70,6 +78,7 @@
       <!-- Home — Figma: Home Page (1:2) -->
       <section id="screen-home" class="screen screen--home" data-node-id="1:2" aria-label="Home">
         <header class="home-header">
+          <h1 class="brand-title">LUNASCOPE</h1>
           <div class="today-moon" aria-hidden="true">
             <div class="today-moon__stage">
               <div class="today-moon__image">
@@ -115,7 +124,6 @@
               </svg>
             </div>
           </div>
-          <h1 class="brand-title">LUNASCOPE</h1>
         </header>
         <div class="card card--datetime card--datetime-today">
           <p class="card__label card__label--today">DATE AND TIME</p>

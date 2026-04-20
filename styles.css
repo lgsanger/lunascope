@@ -10,15 +10,18 @@
 
 :root {
   --color-bg: #ccafe5;
+  /* Buttons, pills, light cards — soft lavender (lighter than page bg) */
+  --color-surface: #e2d7f4;
+  --color-surface-hover: #d4c6ea;
   --color-ink: #472164;
   --color-border: #8159a0;
   --color-muted: #b1a1be;
   /* Background sparkles — medium lavender, a step darker than page bg */
   --color-starfield: #9f82c4;
   --font-display: "Rosalie", serif;
-  --font-body: "Bhavuka", serif;
-  /* Times caps + tracking — real Bold (700); lighter weights often don’t render for Times NR */
-  --font-times-caps-weight: 700;
+  --font-body: "swear-display", "Swear Display", Georgia, serif;
+  /* Swear Display Light (Adobe Fonts) */
+  --font-body-weight: 300;
   --radius-pill: 20px;
   --radius-back: 20px;
   --shadow-brand: 0 4px 4px rgba(0, 0, 0, 0.25);
@@ -35,18 +38,6 @@
   /* Home moon — surface + craters (no outer ring; sits on page background) */
   --moon-surface: #b5a7c4;
   --moon-crater: #9487a2;
-  /* Even halo around the moon — 0 offset so glow is the same on every side */
-  --shadow-moon:
-    0 0 0 2px rgba(71, 33, 100, 0.32),
-    0 0 20px 4px rgba(71, 33, 100, 0.38),
-    0 0 40px 10px rgba(71, 33, 100, 0.3),
-    0 0 64px 18px rgba(71, 33, 100, 0.2);
-  /* Same look as --shadow-moon, slightly tighter blur/spread so pills don’t bloom as wide */
-  --shadow-moon-btn:
-    0 0 0 2px rgba(71, 33, 100, 0.32),
-    0 0 16px 3px rgba(71, 33, 100, 0.38),
-    0 0 32px 8px rgba(71, 33, 100, 0.3),
-    0 0 50px 14px rgba(71, 33, 100, 0.2);
 }
 
 *,
@@ -61,7 +52,8 @@ body {
   min-height: 100%;
   background: var(--color-bg);
   color: var(--color-ink);
-  font-family: var(--font-body), Georgia, serif;
+  font-family: var(--font-body);
+  font-weight: var(--font-body-weight);
 }
 
 body {
@@ -299,9 +291,9 @@ body {
   letter-spacing: 0.42em;
   padding-inline-end: 0.35em;
   text-transform: uppercase;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
 }
 
 .home-nav__chevron {
@@ -383,7 +375,7 @@ body {
   pointer-events: none;
 }
 
-/* Buttons — lavender fill + moon glow shadow (no stroke), Times caps + tracking */
+/* Buttons — very light surface */
 
 .btn-pill {
   position: relative;
@@ -394,36 +386,33 @@ body {
   width: 100%;
   min-height: 67px;
   padding: 0.85rem 1.25rem 0.95rem 1.35rem;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.42em;
   text-transform: uppercase;
   line-height: 1.35;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
   color: var(--color-ink);
   border: none;
   border-radius: 9999px;
-  box-shadow: var(--shadow-moon-btn);
   transition:
     background-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.2s ease;
 }
 
 button.btn-pill {
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   appearance: none;
   -webkit-appearance: none;
   border: none;
 }
 
 .btn-pill:hover {
-  background-color: #d4c4e8;
-  box-shadow: var(--shadow-moon-btn);
+  background-color: var(--color-surface-hover);
 }
 
 .btn-pill:active {
@@ -465,21 +454,18 @@ button.btn-pill {
   min-width: 3.5rem;
   min-height: 2.85rem;
   padding: 0.65rem 1.35rem;
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
   border: none;
   border-radius: 9999px;
   color: var(--color-ink);
-  box-shadow: var(--shadow-moon-btn);
   text-decoration: none;
   transition:
     background-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.2s ease;
 }
 
 .btn-back:hover {
-  background-color: #d4c4e8;
-  box-shadow: var(--shadow-moon-btn);
+  background-color: var(--color-surface-hover);
 }
 
 .btn-back:active {
@@ -498,9 +484,9 @@ button.btn-pill {
 
 .screen-subtitle {
   margin: 0 0 var(--screen-after-header);
-  font-family: var(--font-body), Georgia, serif;
+  font-family: var(--font-body);
   font-size: 30px;
-  font-weight: 400;
+  font-weight: var(--font-body-weight);
   text-align: center;
   color: var(--color-ink);
 }
@@ -531,9 +517,8 @@ button.btn-pill {
   width: min(292px, 84vw);
   aspect-ratio: 1;
   border-radius: 50%;
+  border: none;
   background: var(--color-ink);
-  border: 2px solid var(--color-border);
-  box-shadow: 0 6px 20px rgba(71, 33, 100, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -576,9 +561,9 @@ button.btn-pill {
 }
 
 .today-moon__phase-text {
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: 13px;
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.32em;
   text-transform: uppercase;
   fill: rgba(255, 255, 255, 0.92);
@@ -590,8 +575,12 @@ button.btn-pill {
   letter-spacing: 0.24em;
 }
 
+.screen--home .brand-title {
+  margin-bottom: var(--space-home-rhythm);
+}
+
 .screen--home .today-moon {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
 }
 
 .screen--home .card.card--datetime.card--datetime-today {
@@ -627,10 +616,10 @@ button.btn-pill {
   margin-right: auto;
   padding: 1.5rem 1.35rem 1.65rem;
   gap: 0.75rem;
-  background: var(--color-bg);
-  border: 1px solid var(--color-ink);
+  background: var(--color-surface);
+  border: none;
+  box-shadow: none;
   border-radius: var(--radius-pill);
-  box-shadow: 0 6px 18px rgba(71, 33, 100, 0.12);
   align-items: stretch;
 }
 
@@ -638,9 +627,9 @@ button.btn-pill {
   margin: 0;
   align-self: center;
   text-align: center;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: 0.82rem;
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.42em;
   color: var(--color-ink);
   text-transform: uppercase;
@@ -659,7 +648,7 @@ button.btn-pill {
 
 .card__date.card__date--today,
 .card__time.card__time--today {
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   color: var(--color-ink);
 }
 
@@ -676,13 +665,13 @@ button.btn-pill {
 
 .card__date.card__date--today .card__date-line {
   display: block;
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
 }
 
 .card__time.card__time--today {
   margin: 0;
   font-size: clamp(1.15rem, 3.6vw, 1.4rem);
-  font-weight: 400;
+  font-weight: var(--font-body-weight);
   text-align: center;
   align-self: center;
 }
@@ -751,11 +740,11 @@ button.btn-pill {
   max-width: 247px;
   margin-left: auto;
   margin-right: auto;
-  background: var(--color-ink);
-  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border: 1px solid var(--color-ink);
   border-radius: var(--radius-pill);
   padding: 0.75rem;
-  color: var(--color-muted);
+  color: var(--color-ink);
   font-size: 22px;
   outline: none;
 }
@@ -768,9 +757,9 @@ button.btn-pill {
 .screen--reflection .screen-subtitle {
   /* Match .screen-header margin-bottom so title sits centered between header and meditation card */
   margin: 0 0 var(--screen-back-to-body);
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.42em;
   text-transform: uppercase;
   line-height: 1.35;
@@ -783,10 +772,9 @@ button.btn-pill {
   margin-left: auto;
   margin-right: auto;
   padding: 1.5rem 1.35rem 1.65rem;
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-ink);
   border-radius: var(--radius-pill);
-  box-shadow: 0 6px 18px rgba(71, 33, 100, 0.12);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -804,9 +792,9 @@ button.btn-pill {
 
 .reflection-meditation__hint {
   margin: 0;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.82rem, 2.6vw, 0.95rem);
-  font-weight: 400;
+  font-weight: var(--font-body-weight);
   line-height: 1.45;
   color: var(--color-ink);
   text-align: center;
@@ -845,13 +833,13 @@ button.btn-pill {
   gap: 0.45rem;
   min-height: 2.85rem;
   padding: 0.55rem 1rem;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.72rem, 2.4vw, 0.82rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--color-ink);
-  background: var(--color-bg);
+  background: var(--color-surface);
   border-radius: 9999px;
   cursor: pointer;
   transition:
@@ -861,7 +849,7 @@ button.btn-pill {
 }
 
 .screen--reflection .reflection-meditation-btn:hover:not(:disabled) {
-  background-color: #d4c4e8;
+  background-color: var(--color-surface-hover);
 }
 
 .screen--reflection .reflection-meditation-btn:active:not(:disabled) {
@@ -888,12 +876,6 @@ button.btn-pill {
   top: 0.06em;
 }
 
-.screen--reflection .card--meditation.reflection-meditation--playing {
-  box-shadow:
-    0 6px 18px rgba(71, 33, 100, 0.12),
-    0 0 0 1px rgba(71, 33, 100, 0.08);
-}
-
 .screen--reflection .card--prompt.card--reflection-light {
   margin-bottom: 1rem;
 }
@@ -904,9 +886,9 @@ button.btn-pill {
 
 .screen--reflection .card__tag--reflection {
   margin: 0;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.42em;
   text-transform: uppercase;
   color: var(--color-ink);
@@ -926,9 +908,9 @@ button.btn-pill {
 
 .screen--reflection .card__body--reflection {
   margin: 0;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.95rem, 3.2vw, 1.12rem);
-  font-weight: 400;
+  font-weight: var(--font-body-weight);
   line-height: 1.45;
   color: var(--color-ink);
   text-align: center;
@@ -939,9 +921,9 @@ button.btn-pill {
   align-self: flex-start;
   width: 100%;
   text-align: left;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.72rem, 2.4vw, 0.85rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--color-ink);
@@ -954,12 +936,12 @@ button.btn-pill {
   max-width: none;
   margin-left: 0;
   margin-right: 0;
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-ink);
   border-radius: var(--radius-pill);
   padding: 0.85rem 1rem;
   color: var(--color-ink);
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.95rem, 3vw, 1.05rem);
   line-height: 1.4;
   outline: none;
@@ -983,9 +965,9 @@ button.btn-pill {
   min-height: 1.35em;
   margin: 0.35rem 0 0.25rem;
   text-align: center;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.72rem, 2.3vw, 0.85rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--color-ink);
@@ -996,9 +978,9 @@ button.btn-pill {
   margin: 0.6rem auto 0;
   max-width: min(300px, 92vw);
   text-align: center;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.72rem, 2.3vw, 0.85rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--color-ink);
@@ -1020,9 +1002,9 @@ button.btn-pill {
 .past-reflection-empty {
   margin: 0 auto var(--screen-after-header);
   max-width: min(300px, 92vw);
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.88rem, 2.8vw, 1rem);
-  font-weight: 400;
+  font-weight: var(--font-body-weight);
   line-height: 1.45;
   color: var(--color-ink);
   text-align: center;
@@ -1047,18 +1029,17 @@ button.btn-pill {
   margin-right: auto;
   margin-bottom: 1rem;
   padding: 1.5rem 1.35rem 1.65rem;
-  background: var(--color-bg);
+  background: var(--color-surface);
   border: 1px solid var(--color-ink);
   border-radius: var(--radius-pill);
-  box-shadow: 0 6px 18px rgba(71, 33, 100, 0.12);
 }
 
 #screen-past .reflection-card__meta,
 #screen-void .void-card__meta {
   margin: 0 0 0.65rem;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   line-height: 1.35;
@@ -1069,9 +1050,9 @@ button.btn-pill {
 #screen-past .reflection-card__text,
 #screen-void .void-card__text {
   margin: 0;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.95rem, 3.2vw, 1.12rem);
-  font-weight: 400;
+  font-weight: var(--font-body-weight);
   line-height: 1.45;
   color: var(--color-ink);
   text-align: left;
@@ -1082,9 +1063,9 @@ button.btn-pill {
 .void-reflection-empty {
   margin: 0 auto var(--screen-after-header);
   max-width: min(300px, 92vw);
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.88rem, 2.8vw, 1rem);
-  font-weight: 400;
+  font-weight: var(--font-body-weight);
   line-height: 1.45;
   color: var(--color-ink);
   text-align: center;
@@ -1102,18 +1083,18 @@ button.btn-pill {
 
 /* Full Moon Calendar — same Times + tracking as home nav & Today DATE AND TIME */
 .screen--calendar .screen-subtitle {
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.78rem, 2.65vw, 0.92rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.42em;
   text-transform: uppercase;
   line-height: 1.35;
 }
 
 .screen--calendar .screen-hint {
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.72rem, 2.35vw, 0.82rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.28em;
   text-transform: uppercase;
   line-height: 1.45;
@@ -1186,9 +1167,9 @@ button.btn-pill {
   max-width: min(300px, 92vw);
   margin-left: auto;
   margin-right: auto;
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: clamp(0.68rem, 2.1vw, 0.78rem);
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.06em;
   line-height: 1.45;
   text-align: center;
@@ -1224,9 +1205,8 @@ button.btn-pill {
   aspect-ratio: 1;
   flex-shrink: 0;
   border-radius: 50%;
+  border: none;
   background: var(--color-ink);
-  border: 2px solid var(--color-border);
-  box-shadow: 0 6px 20px rgba(71, 33, 100, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1287,9 +1267,9 @@ button.btn-pill {
 
 /* Match Today’s curved phase label scale (~1/15–1/18 cap height vs ring in the 320 viewBox) */
 .calendar-item__label-text {
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: 13px;
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.32em;
   text-transform: uppercase;
   fill: rgba(255, 255, 255, 0.92);
@@ -1380,9 +1360,8 @@ button.btn-pill {
   aspect-ratio: 1;
   flex-shrink: 0;
   border-radius: 50%;
+  border: none;
   background: var(--color-ink);
-  border: 2px solid var(--color-border);
-  box-shadow: 0 6px 20px rgba(71, 33, 100, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1428,9 +1407,9 @@ button.btn-pill {
 }
 
 .phase-item__label-text {
-  font-family: "Times New Roman", Times, serif;
+  font-family: var(--font-body);
   font-size: 13px;
-  font-weight: var(--font-times-caps-weight);
+  font-weight: var(--font-body-weight);
   letter-spacing: 0.32em;
   text-transform: uppercase;
   fill: rgba(255, 255, 255, 0.92);
@@ -1580,8 +1559,7 @@ html:not(.splash-dismissed) .app-root {
   position: relative;
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.12),
-    inset -3px 2px 8px rgba(0, 0, 0, 0.1),
-    var(--shadow-moon);
+    inset -3px 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .splash-moon__crater {
