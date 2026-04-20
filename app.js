@@ -1814,6 +1814,24 @@
   initReflectionMeditation();
   initAppNavMenus();
 
+  /* Cold opens: mobile Safari/Chrome often restore #/calendar (or another route).
+     Strip hash once per load so the app always starts on Home; in-app nav still uses #/… */
+  (function resetInitialRouteToHome() {
+    try {
+      var h = window.location.hash;
+      if (!h || h === "#" || h === "#/") {
+        return;
+      }
+      var path = window.location.pathname || "";
+      var search = window.location.search || "";
+      if (window.history && window.history.replaceState) {
+        window.history.replaceState(null, "", path + search);
+      } else {
+        window.location.hash = "";
+      }
+    } catch (e) {}
+  })();
+
   initSplashScreen();
   onHashChange();
 })();
