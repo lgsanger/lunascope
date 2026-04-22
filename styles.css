@@ -49,7 +49,6 @@
 html,
 body {
   margin: 0;
-  min-height: 100%;
   background: var(--color-bg);
   color: var(--color-ink);
   font-family: var(--font-body);
@@ -60,14 +59,12 @@ body {
   display: flex;
   justify-content: center;
   position: relative;
-  min-height: 100dvh;
 }
 
 /* Transparent so the starfield layer (sibling, z-index 0) stays visible behind content */
 .app-root {
   width: 100%;
   max-width: var(--app-max-width);
-  min-height: 100dvh;
   background: transparent;
   position: relative;
   z-index: 1;
@@ -133,7 +130,6 @@ body {
 /* Screens */
 
 .screen {
-  min-height: 100dvh;
   padding: 0 0 2rem;
 }
 
@@ -1406,7 +1402,6 @@ button.btn-pill {
 #screen-reflection.screen--stack:not(.is-hidden) {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
 }
 
 /* Splash — flat crater moon + LUNASCOPE orbiting once per load; app hidden until done (see app.js) */
